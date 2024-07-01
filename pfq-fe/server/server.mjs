@@ -2,7 +2,7 @@ import express from "express";
 import http from "http";
 import { Server } from "socket.io";
 import cors from "cors";
-import { addCategory } from "./ML-mock.js";
+import { addCategory } from "./ML-mock.mjs";
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
@@ -25,14 +25,15 @@ io.on("connection", (socket) => {
   });
   socket.on("send-customer-message", async (msg) => {
     const messageData = {
-      body,
+      body: msg.body,
       from: msg.username,
-      to: "room",
+      to: "admin",
       created_at: new Date().toLocaleTimeString(),
       category: null,
       sentiment: null,
       is_closed: false,
-      table: msg.table,
+      table: msg.tableNum,
+      sender: msg.sender,
     };
     socket.emit("receive-message", messageData);
     const categorisedMessage = await addCategory(msg); // mock machine learning function, we can assume that here it would be categorised and sent to the db
