@@ -4,7 +4,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { useState, useEffect } from "react";
 import { Login } from "./components/Login";
 import { MessagingScreen } from "./components/MessagingScreen";
-import { io } from "socket.io-client";
+import  io  from "socket.io-client";
 const socket = io("http://localhost:6969");
 
 export default function App() {

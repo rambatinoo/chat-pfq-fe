@@ -7,14 +7,14 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: [`http://localhost:8081`, "http://localhost:5173"],
+    origin: [`http://localhost:8081`, "http://localhost:5173","http://localhost:6969"],
     methods: ["GET", "POST"],
   },
 });
 
 app.use(
   cors({
-    origin: [`http://localhost:8081`, "http://localhost:5173"],
+    origin: [`http://localhost:8081`, "http://localhost:5173","http://localhost:6969"],
     methods: ["GET", 'POST'],
   })
 );
@@ -23,10 +23,15 @@ const users = {};
 
 io.on("connection", (socket) => {
   console.log("A user connected");
+
+
   socket.on("register", (username) => {
     users[socket.id] = username;
     socket.join(username);
+    console.log(`${username} joined room: ${username}`);
   });
+
+
   socket.on("send-customer-message", async (msg) => {
     const messageData = {
       body: msg.body,
@@ -39,8 +44,11 @@ io.on("connection", (socket) => {
       table: msg.tableNum,
       sender: msg.sender,
     };
+
     socket.emit("receive-message", messageData);
+
     const categorisedMessage = await addCategory(msg); // mock machine learning function, we can assume that here it would be categorised and sent to the db
+
     io.to("admin").emit("receive-message", categorisedMessage);
   });
 
@@ -54,11 +62,10 @@ io.on("connection", (socket) => {
       sentiment: null,
       is_closed: false,
       table: msg.tableNum,
-      sender: msg.sender,
+      sender: false,
     };
-    socket.emit("receive-message", messageData);
-    const categorisedMessage = await addCategory(msg); // mock machine learning function, we can assume that here it would be categorised and sent to the db
-    io.to("matt").emit("receive-message", categorisedMessage);
+
+    io.emit("receive-message", messageData);
   });
 
   socket.on("disconnect", () => {
@@ -66,6 +73,8 @@ io.on("connection", (socket) => {
     delete users[socket.id];
   });
 });
+
+
 server.listen(6969, () => {
   console.log("Listening on port: 6969");
 });

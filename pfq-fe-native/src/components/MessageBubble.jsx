@@ -6,9 +6,9 @@ export const MessageBubble = ({ body, isSender, timestamp }) => {
     <View
       style={[styles.container, isSender ? styles.sender : styles.receiver]}
     >
-      <Text style={styles.messageText}>{body}</Text>
+      <Text style={isSender? styles.messageText : styles.messageTextAdmin}>{body}</Text>
     </View>
-    <Text style={styles.timestamp}>{timestamp}</Text>
+    <Text style={isSender ? styles.timestamp : styles.timestampAdmin}>{timestamp}</Text>
     </View>
   );
 };
@@ -18,8 +18,7 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     marginHorizontal: 10,
     borderRadius: 10,
-    maxWidth: "80%",
-    marginLeft: 150,
+    maxWidth: "100%",
   },
   timestamp : {
     padding: 10,
@@ -29,7 +28,15 @@ const styles = StyleSheet.create({
     maxWidth: "80%",
     marginLeft: 250,
   },
+  timestampAdmin : {
+    padding: 10,
+    marginVertical: 0,
+    marginHorizontal: 10,
+    borderRadius: 10,
+    maxWidth: "80%",
+  },
   sender: { backgroundColor: "#007AFF", alignSelf: "flex-end" },
-  receiver: { backgroundColor: "#E5E5EA", alignSelf: "flex-start" },
+  receiver: { backgroundColor: "#E5E5EA", marginRight: 200},
   messageText: { color: "#fff" },
+  messageTextAdmin: { color: "#000" },
 });

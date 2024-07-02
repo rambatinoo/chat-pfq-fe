@@ -12,7 +12,7 @@ export const MainScreen = ({username, socket}) => {
     socket.on("receive-message", (msg) => {
       console.log(msg);
       setMessages((prevMessages) => {
-        return [msg, ...prevMessages];
+        return [...prevMessages, msg];
       });
     });
     return () => {
@@ -25,7 +25,8 @@ export const MainScreen = ({username, socket}) => {
       socket.emit("send-admin-message", {
         body,
         username,
-        sender: true,
+        sender: false,
+        created_at: new Date().toLocaleTimeString(),
       });
       setBody("");
     }
@@ -35,7 +36,11 @@ export const MainScreen = ({username, socket}) => {
     <div>
         <h1>RESPOND</h1>
         {messages.map((msg) => {
-            return (<div key={msg.created_at}><p>{msg.body}</p>
+            return (<div key={msg.created_at} className="admin-message">
+              <p>Message: {msg.body}</p>
+              <p>From: {msg.username ? msg.username : msg.from}</p>
+              <p>Time: {msg.created_at}</p>
+            {msg.category ? <p>Category: {msg.category}</p> : null }
             {msg.tableNum ? <p>Table No: {msg.tableNum}</p> : null}
             </div>)
         })}
