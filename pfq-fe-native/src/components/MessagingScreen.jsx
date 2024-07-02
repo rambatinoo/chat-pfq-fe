@@ -28,7 +28,7 @@ export const MessagingScreen = ({ username, socket }) => {
     return () => {
       socket.off("receive-message");
     };
-  }, [socket]);
+  }, [messages]);
 
   const sendMessage = () => {
     if (body.trim() !== "") {
@@ -42,7 +42,6 @@ export const MessagingScreen = ({ username, socket }) => {
       setTableNum("");
     }
   };
-
   return (
     <View style={styles.container}>
       <FlatList
