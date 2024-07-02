@@ -8,8 +8,10 @@ import {
   StyleSheet,
 } from "react-native";
 import { MessageBubble } from "./MessageBubble";
+import { filterMessagesByUsername } from "../utils/filterMessagesByUsername";
 
 export const MessagingScreen = ({ username, socket }) => {
+  console.log(username);
   const [messages, setMessages] = useState([]);
   const [body, setBody] = useState("");
   const [tableNum, setTableNum] = useState("");
@@ -20,7 +22,6 @@ export const MessagingScreen = ({ username, socket }) => {
 
   useEffect(() => {
     socket.on("receive-message", (msg) => {
-      console.log(msg);
       setMessages((prevMessages) => {
         return [...prevMessages, msg];
       });
@@ -35,9 +36,10 @@ export const MessagingScreen = ({ username, socket }) => {
       socket.emit("send-customer-message", {
         body,
         tableNum,
-        username,
+        from: username,
+        to: "admin",
         sender: true,
-        created_at: new Date().toLocaleTimeString()
+        created_at: new Date().toLocaleTimeString(),
       });
       setBody("");
       setTableNum("");
@@ -46,9 +48,13 @@ export const MessagingScreen = ({ username, socket }) => {
   return (
     <View style={styles.container}>
       <FlatList
-        data={messages}
+        data={filterMessagesByUsername(messages, username)}
         renderItem={({ item }) => (
-          <MessageBubble body={item.body} isSender={item.sender} timestamp={item.created_at}/>
+          <MessageBubble
+            body={item.body}
+            isSender={item.sender}
+            timestamp={item.created_at}
+          />
         )}
         keyExtractor={(item, index) => index.toString()}
         contentContainerStyle={styles.messageContainer}
@@ -124,7 +130,7 @@ const styles = StyleSheet.create({
   },
   tableInput: {
     height: 40,
-    width: '80%',
+    width: "80%",
     borderWidth: 1,
     borderColor: "#ccc",
     borderRadius: 20,
@@ -153,8 +159,6 @@ const styles = StyleSheet.create({
 //       setMessages((prevMessages) => [...prevMessages, msg])
 //     })
 //   }, [])
-
-
 
 //   const sendMessage = () => {
 //     if (body.trim() !== "") {
