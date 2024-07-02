@@ -15,6 +15,7 @@ const io = new Server(server, {
 app.use(
   cors({
     origin: [`http://localhost:8081`, "http://localhost:5173"],
+    methods: ["GET", 'POST'],
   })
 );
 
