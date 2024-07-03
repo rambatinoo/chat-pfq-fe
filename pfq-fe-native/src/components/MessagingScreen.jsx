@@ -88,6 +88,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "space-between",
+    marginBottom: 400
   },
   messageContainer: {
     paddingHorizontal: 10,

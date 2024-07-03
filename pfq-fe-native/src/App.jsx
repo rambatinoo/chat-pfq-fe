@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { Login } from "./components/Login";
 import { MessagingScreen } from "./components/MessagingScreen";
 import  io  from "socket.io-client";
-const socket = io("http://localhost:6969");
+const socket = io("https://chat-pfq-server.onrender.com/");
 
 export default function App() {
   const [username, setUsername] = useState("");

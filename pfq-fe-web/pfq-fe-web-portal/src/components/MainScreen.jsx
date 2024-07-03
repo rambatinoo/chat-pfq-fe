@@ -21,6 +21,7 @@ export const MainScreen = ({ username, socket }) => {
   }, [socket]);
 
   const sendMessage = () => {
+    console.log(messages, "<<<<<<<<<<")
     const replyingTo = messages[0].from;
     if (body.trim() !== "") {
       socket.emit("send-admin-message", {
