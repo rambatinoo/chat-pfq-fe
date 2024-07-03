@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import {
   FlatList,
   TextInput,
@@ -15,6 +15,13 @@ export const MessagingScreen = ({ username, socket }) => {
   const [messages, setMessages] = useState([]);
   const [body, setBody] = useState("");
   const [tableNum, setTableNum] = useState("");
+  const flatListRef = useRef(null);
+
+  useEffect(() => {
+    if (flatListRef.current) {
+      flatListRef.current.scrollToEnd({ animated: false });
+    }
+  }, [messages]);
 
   useEffect(() => {
     socket.emit("register", username);
@@ -48,6 +55,7 @@ export const MessagingScreen = ({ username, socket }) => {
   return (
     <View style={styles.container}>
       <FlatList
+        ref={flatListRef}
         data={filterMessagesByUsername(messages, username)}
         renderItem={({ item }) => (
           <MessageBubble
@@ -88,7 +96,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "space-between",
-    marginBottom: 400
+    marginBottom: 300,
   },
   messageContainer: {
     paddingHorizontal: 10,
@@ -101,6 +109,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderColor: "#ccc",
     backgroundColor: "#fff",
+    marginTop: 30,
   },
   messageInput: {
     borderWidth: 1,
