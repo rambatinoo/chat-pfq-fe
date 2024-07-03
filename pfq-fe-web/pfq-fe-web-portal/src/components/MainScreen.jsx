@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react";
+import { sampleMessages } from "../../messagesData";
+import { MessagePreview } from "./MessagePreview";
 
 export const MainScreen = ({ username, socket }) => {
-  const [messages, setMessages] = useState([]);
+  const [AllMessages, setAllMessages] = useState(sampleMessages);
+  const [conversationMessages, setConversationMessages] = useState([]);
+  const [category, setCategory] = useState("All");
+  const [talkingTo, setTalkingTo] = useState("");
   const [body, setBody] = useState("");
 
   useEffect(() => {
@@ -11,8 +16,8 @@ export const MainScreen = ({ username, socket }) => {
   useEffect(() => {
     socket.on("receive-message", (msg) => {
       console.log(msg);
-      setMessages((prevMessages) => {
-        return [...prevMessages, msg];
+      setAllMessages((prevMessages) => {
+        return [msg, ...prevMessages];
       });
     });
     return () => {
@@ -20,9 +25,14 @@ export const MainScreen = ({ username, socket }) => {
     };
   }, [socket]);
 
+  const handleClick = (e) => {
+    e.preventDefault();
+    setCategory(e.target.value);
+  };
+  console.log(talkingTo);
+
   const sendMessage = () => {
-    console.log(messages, "<<<<<<<<<<")
-    const replyingTo = messages[0].from;
+    const replyingTo = conversationMessages[0].from;
     if (body.trim() !== "") {
       socket.emit("send-admin-message", {
         body,
@@ -35,29 +45,90 @@ export const MainScreen = ({ username, socket }) => {
   };
 
   return (
-    <div>
-      <h1>RESPOND</h1>
-      {messages.map((msg) => {
-        return (
-          <div key={msg.created_at} className="admin-message">
-            <p>Message: {msg.body}</p>
-            <p>From: {msg.username ? msg.username : msg.from}</p>
-            <p>Time: {msg.created_at}</p>
-            {msg.category ? <p>Category: {msg.category}</p> : null}
-            {msg.tableNum ? <p>Table No: {msg.tableNum}</p> : null}
-          </div>
-        );
-      })}
-      <div></div>
-      <div>
-        <textarea
-          placeholder="Message"
-          onChange={(e) => {
-            setBody(e.target.value);
-          }}
-          value={body}
-        ></textarea>
-        <button onClick={sendMessage}>Send</button>
+    <div className="parent">
+      <div id="column-1"></div>
+      <div id="column-2">
+        <button onClick={handleClick} value={"All"}>
+          All
+        </button>
+        <button onClick={handleClick} value={"Service"}>
+          Service
+        </button>
+        <button onClick={handleClick} value={"Food Quality"}>
+          Food Quality
+        </button>
+        <button onClick={handleClick} value={"Staff"}>
+          Staff
+        </button>
+        <button onClick={handleClick} value={"Price"}>
+          Price
+        </button>
+        <button onClick={handleClick} value={"Ambience"}>
+          Ambience
+        </button>
+        <button onClick={handleClick} value={"Cleanliness"}>
+          Cleanliness
+        </button>
+        <button onClick={handleClick} value={"Location"}>
+          Location
+        </button>
+        <button onClick={handleClick} value={"Menu"}>
+          Menu
+        </button>
+        <button onClick={handleClick} value={"Drinks"}>
+          Drinks
+        </button>
+        <button onClick={handleClick} value={"Waiting Time"}>
+          Waiting Time
+        </button>
+        <button onClick={handleClick} value={"Reservation Process"}>
+          Reservation Process
+        </button>
+        <button onClick={handleClick} value={"Outdoor Seating"}>
+          Outdoor Seating
+        </button>
+        <button onClick={handleClick} value={"Events & Catering"}>
+          Events & Catering
+        </button>
+        <button onClick={handleClick} value={"Special Dietary Needs"}>
+          Special Dietary Needs
+        </button>
+      </div>
+      <div id="column-3">
+        {AllMessages.map((msg) => {
+          return (
+            <MessagePreview
+              key={msg.created_at}
+              msg={msg}
+              setTalkingTo={setTalkingTo}
+              category={category}
+            />
+          );
+        })}
+      </div>
+      <div id="column-4">
+        <h1>RESPOND</h1>
+        {conversationMessages.map((msg) => {
+          return (
+            <div key={msg.created_at} className="admin-message">
+              <p>Message: {msg.body}</p>
+              <p>From: {msg.username ? msg.username : msg.from}</p>
+              <p>Time: {msg.created_at}</p>
+              {msg.category ? <p>Category: {msg.category}</p> : null}
+              {msg.tableNum ? <p>Table No: {msg.tableNum}</p> : null}
+            </div>
+          );
+        })}
+        <div>
+          <textarea
+            placeholder="Message"
+            onChange={(e) => {
+              setBody(e.target.value);
+            }}
+            value={body}
+          ></textarea>
+          <button onClick={sendMessage}>Send</button>
+        </div>
       </div>
     </div>
   );
