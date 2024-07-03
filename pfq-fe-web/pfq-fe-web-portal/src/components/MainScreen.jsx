@@ -1,8 +1,32 @@
 import { useEffect, useState } from "react";
+import { getRequest } from "../../../../pfq-fe-native/src/utils/api";
+
 
 export const MainScreen = ({ username, socket }) => {
   const [messages, setMessages] = useState([]);
   const [body, setBody] = useState("");
+
+  useEffect(() => {
+    const getMessageThread = async () => {
+      try {
+        const messages = await getRequest("messages")
+        const updatedMessages = messages.map((message) => {
+          if (message.from === username.toLowerCase()) {
+            message.sender = true
+            return message
+          } else {
+            return message
+          }
+        })
+        setMessages(updatedMessages)
+      } catch (err) {
+        console.log("Error:", err)
+        throw err
+      }
+    }
+
+    getMessageThread()
+  }, [])
 
   useEffect(() => {
     socket.emit("register", username);
@@ -21,7 +45,6 @@ export const MainScreen = ({ username, socket }) => {
   }, [socket]);
 
   const sendMessage = () => {
-    console.log(messages, "<<<<<<<<<<")
     const replyingTo = messages[0].from;
     if (body.trim() !== "") {
       socket.emit("send-admin-message", {

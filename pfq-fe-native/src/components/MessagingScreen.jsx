@@ -10,13 +10,35 @@ import {
 } from "react-native";
 import { MessageBubble } from "./MessageBubble";
 import { filterMessagesByUsername } from "../utils/filterMessagesByUsername";
+import { getRequest } from "../utils/api";
 
 export const MessagingScreen = ({ username, socket }) => {
-  console.log(username);
   const [messages, setMessages] = useState([]);
   const [body, setBody] = useState("");
   const [tableNum, setTableNum] = useState("");
   const flatListRef = useRef(null);
+
+  useEffect(() => {
+    const getMessageThread = async () => {
+      try {
+        const messages = await getRequest("messages")
+        const updatedMessages = messages.map((message) => {
+          if (message.from === username.toLowerCase()) {
+            message.sender = true
+            return message
+          } else {
+            return message
+          }
+        })
+        setMessages(updatedMessages)
+      } catch (err) {
+        console.log("Error:", err)
+        throw err
+      }
+    }
+
+    getMessageThread()
+  }, [])
 
   useEffect(() => {
     if (flatListRef.current) {

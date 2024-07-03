@@ -34,7 +34,8 @@ const styles = StyleSheet.create({
   },
   timestampAdmin: {
     padding: 10,
-    marginVertical: 0,
+    marginBottom: 10,
+    marginTop: -10,
     marginHorizontal: 10,
     borderRadius: 10,
     maxWidth: "80%",

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { exec } from "../../../../pfq-fe-native/src/utils/encryption";
+import { getRequest } from "../../../../pfq-fe-native/src/utils/api";
 
 export const Login = ({ setUsername }) => {
   const [usernameText, setUsernameText] = useState("");
@@ -16,20 +17,52 @@ export const Login = ({ setUsername }) => {
     }
   };
 
+  // const handleLogin = async (e) => {
+  //   e.preventDefault();
+  //   if (passwordText) {
+  //     const result = await exec(passwordText);
+  //     if (result) {
+  //       validUsers.includes(usernameText.toLowerCase())
+  //         ? setUsername(usernameText)
+  //         : setMessage("Invalid Username") 
+  //     } else {
+  //       setMessage("Incorrect Password");
+  //       setTimeout(() => setMessage(""), 2000)
+  //     }
+  //   }
+  // };
+
   const handleLogin = async (e) => {
-    e.preventDefault();
-    if (passwordText) {
-      const result = await exec(passwordText);
-      if (result) {
-        validUsers.includes(usernameText.toLowerCase())
-          ? setUsername(usernameText)
-          : setMessage("Invalid Username") 
-      } else {
-        setMessage("Incorrect Password");
-        setTimeout(() => setMessage(""), 2000)
+    e.preventDefault()
+    if (usernameText && passwordText) {
+      try {
+        const user = await getRequest(`users/${usernameText.toLowerCase()}`)
+        if (!user) {
+          setMessage("User doesn't exist!")
+          setTimeout(() => setMessage(""), 5000)
+          return
+        } 
+        if (!user.isAdmin) {
+          setMessage("User isn't an admin!")
+          setTimeout(() => setMessage(""), 5000)
+          return
+        }
+        const passwordCheck = await exec(user.password, passwordText)
+        if (!passwordCheck) {
+          setMessage("Incorrect password, please try again.")
+          setTimeout(() => setMessage(""), 5000)
+          return
+        }
+        setUsername(usernameText)
+      } catch (err) {
+        console.log("Error:", err)
+        throw err
       }
+    } else {
+      setMessage("Missing fields!")
+      setTimeout(() => setMessage(""), 5000)
     }
-  };
+  }
 
   return (
     <div>
