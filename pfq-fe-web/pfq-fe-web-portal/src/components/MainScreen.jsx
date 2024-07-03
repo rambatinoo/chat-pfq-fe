@@ -25,6 +25,16 @@ export const MainScreen = ({ username, socket }) => {
     };
   }, [socket]);
 
+  useEffect(() => {
+    const filteredMessages = AllMessages.filter(
+      (msg) => msg.from === talkingTo || msg.to === talkingTo
+    );
+    console.log(filteredMessages, "filtered messages");
+    setConversationMessages(filteredMessages);
+  }, [talkingTo, AllMessages]);
+
+  console.log(conversationMessages);
+
   const handleClick = (e) => {
     e.preventDefault();
     setCategory(e.target.value);
