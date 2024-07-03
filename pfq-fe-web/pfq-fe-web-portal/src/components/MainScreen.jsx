@@ -38,6 +38,7 @@ export const MainScreen = ({ username, socket }) => {
   const handleClick = (e) => {
     e.preventDefault();
     setCategory(e.target.value);
+    setConversationMessages([]);
   };
   console.log(talkingTo);
 
