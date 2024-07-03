@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Text,
   StyleSheet,
+  KeyboardAvoidingView,
 } from "react-native";
 import { MessageBubble } from "./MessageBubble";
 import { filterMessagesByUsername } from "../utils/filterMessagesByUsername";
@@ -19,7 +20,7 @@ export const MessagingScreen = ({ username, socket }) => {
 
   useEffect(() => {
     if (flatListRef.current) {
-      flatListRef.current.scrollToEnd({ animated: false });
+      flatListRef.current.scrollToEnd({ animated: true });
     }
   }, [messages]);
 
@@ -53,42 +54,49 @@ export const MessagingScreen = ({ username, socket }) => {
     }
   };
   return (
-    <View style={styles.container}>
-      <FlatList
-        ref={flatListRef}
-        data={filterMessagesByUsername(messages, username)}
-        renderItem={({ item }) => (
-          <MessageBubble
-            body={item.body}
-            isSender={item.sender}
-            timestamp={item.created_at}
+    <KeyboardAvoidingView style={styles.container}>
+      <View>
+        <View style={styles.messageList}>
+          <FlatList
+            ref={flatListRef}
+            data={filterMessagesByUsername(messages, username)}
+            renderItem={({ item }) => (
+              <MessageBubble
+                body={item.body}
+                isSender={item.sender}
+                timestamp={item.created_at}
+              />
+            )}
+            keyExtractor={(item, index) => index.toString()}
+            contentContainerStyle={styles.messageContainer}
+            onContentSizeChange={() =>
+              flatListRef.current.scrollToEnd({ animated: true })
+            }
           />
-        )}
-        keyExtractor={(item, index) => index.toString()}
-        contentContainerStyle={styles.messageContainer}
-      />
-      <View style={styles.messageInputContainer}>
-        <TextInput
-          style={styles.messageInput}
-          placeholder="Message"
-          onChangeText={(text) => setBody(text)}
-          value={body}
-          multiline={true}
-          scrollEnabled={true}
-        />
-        <TouchableOpacity style={styles.sendButton} onPress={sendMessage}>
-          <Text style={styles.sendButtonText}>Send</Text>
-        </TouchableOpacity>
+        </View>
+        <View style={styles.messageInputContainer}>
+          <TextInput
+            style={styles.messageInput}
+            placeholder="Message"
+            onChangeText={(text) => setBody(text)}
+            value={body}
+            multiline={true}
+            scrollEnabled={true}
+          />
+          <TouchableOpacity style={styles.sendButton} onPress={sendMessage}>
+            <Text style={styles.sendButtonText}>Send</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.middleContainer}>
+          <TextInput
+            style={styles.tableInput}
+            placeholder="Table Number"
+            onChangeText={(text) => setTableNum(text)}
+            value={tableNum}
+          />
+        </View>
       </View>
-      <View style={styles.middleContainer}>
-        <TextInput
-          style={styles.tableInput}
-          placeholder="Table Number"
-          onChangeText={(text) => setTableNum(text)}
-          value={tableNum}
-        />
-      </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -109,7 +117,9 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderColor: "#ccc",
     backgroundColor: "#fff",
-    marginTop: 30,
+  },
+  messageList: {
+    maxHeight: "80%",
   },
   messageInput: {
     borderWidth: 1,
