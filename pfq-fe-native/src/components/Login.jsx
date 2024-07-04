@@ -1,32 +1,42 @@
 import { useState } from "react";
 import { Text, TextInput, View, StyleSheet, Button } from "react-native";
 import { exec } from "../utils/encryption";
+import { getRequest } from "../utils/api";
+
 
 export const Login = ({ setUsername }) => {
   const [usernameText, setUsernameText] = useState("");
   const [passwordText, setPasswordText] = useState("");
-  const validUsers = ["barry", "matt"];
   const [message, setMessage] = useState("");
 
-
-  
   const handleLogin = async () => {
-    if (passwordText) {
-      const result = await exec(passwordText);
-      if (result) {
-        validUsers.includes(usernameText.toLowerCase())
-          ? setUsername(usernameText)
-          : setMessage("Invalid Username");
-      } else {
-        setMessage("Incorrect Password");
+    if (usernameText && passwordText) {
+      try {
+        const user = await getRequest(`users/${usernameText.toLowerCase()}`)
+        if (!user) {
+          setMessage("User doesn't exist!")
+          setTimeout(() => setMessage(""), 5000)
+          return
+        } 
+        const passwordCheck = await exec(user.password, passwordText)
+        if (!passwordCheck) {
+          setMessage("Incorrect password, please try again.")
+          setTimeout(() => setMessage(""), 5000)
+          return
+        }
+        setUsername(usernameText)
+      } catch (err) {
+        console.log("Error:", err)
+        throw err
       }
+    } else {
+      setMessage("Missing fields!")
+      setTimeout(() => setMessage(""), 5000)
     }
-  };
+  }
 
   return (
     <View>
-      {message && <Text>{message}</Text>}
-
       <TextInput
         style={styles.input}
         placeholder="username"
@@ -40,6 +50,7 @@ export const Login = ({ setUsername }) => {
         value={passwordText}
         secureTextEntry
       />
+      {message && <Text style={{"color": "red"}}>{message}</Text>}
       <Button title="Login" onPress={handleLogin} />
     </View>
   );

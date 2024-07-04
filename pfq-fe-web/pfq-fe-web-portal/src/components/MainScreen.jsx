@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
+
+import { getRequest } from "../../../../pfq-fe-native/src/utils/api";
 import { sampleMessages } from "../../messagesData";
 import { MessagePreview } from "./MessagePreview";
+
 
 export const MainScreen = ({ username, socket }) => {
   const [AllMessages, setAllMessages] = useState(sampleMessages);
@@ -8,6 +11,28 @@ export const MainScreen = ({ username, socket }) => {
   const [category, setCategory] = useState("All");
   const [talkingTo, setTalkingTo] = useState("");
   const [body, setBody] = useState("");
+
+  useEffect(() => {
+    const getMessageThread = async () => {
+      try {
+        const messages = await getRequest("messages")
+        const updatedMessages = messages.map((message) => {
+          if (message.from === username.toLowerCase()) {
+            message.sender = true
+            return message
+          } else {
+            return message
+          }
+        })
+        setAllMessages(updatedMessages)
+      } catch (err) {
+        console.log("Error:", err)
+        throw err
+      }
+    }
+
+    getMessageThread()
+  }, [])
 
   useEffect(() => {
     socket.emit("register", username);
@@ -43,7 +68,11 @@ export const MainScreen = ({ username, socket }) => {
   console.log(talkingTo);
 
   const sendMessage = () => {
+
+
+
     const replyingTo = conversationMessages[0].from;
+
     if (body.trim() !== "") {
       socket.emit("send-admin-message", {
         body,
