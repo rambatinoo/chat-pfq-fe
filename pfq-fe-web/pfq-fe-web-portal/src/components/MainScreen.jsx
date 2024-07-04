@@ -1,20 +1,19 @@
 import { useEffect, useState } from "react";
 import React from "react";
 import { getRequest } from "../../../../pfq-fe-native/src/utils/api";
-import { sampleMessages } from "../../messagesData";
 import { MessagePreview } from "./MessagePreview";
-import { Chip } from "@mui/material";
-import { alignProperty } from "@mui/material/styles/cssUtils";
+import { MessageView } from "../Views/MessageView";
+import { PreviewsView } from "../Views/PreviewsView";
 
 export const MainScreen = ({ username, socket }) => {
-  const [AllMessages, setAllMessages] = useState(sampleMessages);
+  const [AllMessages, setAllMessages] = useState([]);
   const [conversationMessages, setConversationMessages] = useState([]);
   const [category, setCategory] = useState("All");
   const [talkingTo, setTalkingTo] = useState("");
   const [body, setBody] = useState("");
   const [nonAdminMessages, setNonAdminMessages] = useState([]);
 
-  console.log(talkingTo);
+  console.log(talkingTo, "from MainScreen");
 
   useEffect(() => {
     const getMessageThread = async () => {
@@ -73,7 +72,8 @@ export const MainScreen = ({ username, socket }) => {
     setTalkingTo("");
   };
 
-  const sendMessage = () => {
+  const sendMessage = (event) => {
+    event.preventDefault();
     const replyingTo = conversationMessages[0].from;
 
     if (body.trim() !== "") {
@@ -88,7 +88,7 @@ export const MainScreen = ({ username, socket }) => {
   };
 
   return (
-    <div className="parent" style={{ height: "95vh" }}>
+    <div className="parent">
       <div id="column-1"></div>
       <div id="column-2">
         <button onClick={handleClick} value={"All"}>
@@ -137,59 +137,18 @@ export const MainScreen = ({ username, socket }) => {
           Special Dietary Needs
         </button>
       </div>
-      <div id="column-3" style={{ overflow: "scroll" }}>
-        {nonAdminMessages.map((msg) => {
-          return (
-            <MessagePreview
-              key={msg.created_at}
-              msg={msg}
-              setTalkingTo={setTalkingTo}
-              category={category}
-            />
-          );
-        })}
-      </div>
-      <div id="column-4">
-        <h1>Replying to {talkingTo}</h1>
-        <div>
-          <textarea
-            placeholder="Message"
-            onChange={(e) => {
-              setBody(e.target.value);
-            }}
-            value={body}
-          ></textarea>
-          <button onClick={sendMessage}>Send</button>
-        </div>
-        <div style={{ height: "80vh", overflow: "scroll" }}>
-          {conversationMessages.map((msg) => {
-            return (
-              <div key={msg.created_at} className="admin-message" style={{display: 'flex', justifyContent: msg.to === 'admin' ? 'flex-start' : "flex-end"}}>
-                 <div >
-                  <Chip
-                    sx={{
-                      height: "auto",
-                      "& .MuiChip-label": {
-                        display: "block",
-                        whiteSpace: "normal",
-                        padding: "0.5rem",
-                      },
-                      maxWidth: "60%",
-                    }}
-                    label={msg.body}
-                  />
-                 </div>
-                <div style={{display: 'flex'}}>
-                  {msg.category ? <p>Category: {msg.category}</p> : null}
-                  {msg.tableNum ? <p>Table No: {msg.tableNum}</p> : null}
-                  {msg.table ? <p>Table No: {msg.table}</p> : null}
-                </div>
-                <p>Time: {msg.created_at}</p>
-              </div>
-            );
-          })}
-        </div>
-      </div>
+      <PreviewsView
+        nonAdminMessages={nonAdminMessages}
+        setTalkingTo={setTalkingTo}
+        category={category}
+      />
+      <MessageView
+        talkingTo={talkingTo}
+        body={body}
+        sendMessage={sendMessage}
+        conversationMessages={conversationMessages}
+        setBody={setBody}
+      />
     </div>
   );
 };
