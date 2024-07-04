@@ -4,7 +4,6 @@ import { getRequest } from "../../../../pfq-fe-native/src/utils/api";
 import { sampleMessages } from "../../messagesData";
 import { MessagePreview } from "./MessagePreview";
 
-
 export const MainScreen = ({ username, socket }) => {
   const [AllMessages, setAllMessages] = useState(sampleMessages);
   const [conversationMessages, setConversationMessages] = useState([]);
@@ -15,24 +14,24 @@ export const MainScreen = ({ username, socket }) => {
   useEffect(() => {
     const getMessageThread = async () => {
       try {
-        const messages = await getRequest("messages")
+        const messages = await getRequest("messages");
         const updatedMessages = messages.map((message) => {
           if (message.from === username.toLowerCase()) {
-            message.sender = true
-            return message
+            message.sender = true;
+            return message;
           } else {
-            return message
+            return message;
           }
-        })
-        setAllMessages(updatedMessages)
+        });
+        setAllMessages(updatedMessages);
       } catch (err) {
-        console.log("Error:", err)
-        throw err
+        console.log("Error:", err);
+        throw err;
       }
-    }
+    };
 
-    getMessageThread()
-  }, [])
+    getMessageThread();
+  }, []);
 
   useEffect(() => {
     socket.emit("register", username);
@@ -68,9 +67,6 @@ export const MainScreen = ({ username, socket }) => {
   console.log(talkingTo);
 
   const sendMessage = () => {
-
-
-
     const replyingTo = conversationMessages[0].from;
 
     if (body.trim() !== "") {
@@ -78,7 +74,7 @@ export const MainScreen = ({ username, socket }) => {
         body,
         replyingTo,
         sender: false,
-        created_at: new Date().toLocaleTimeString(),
+        created_at: new Date(),
       });
       setBody("");
     }
