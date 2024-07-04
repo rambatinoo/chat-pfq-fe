@@ -21,24 +21,24 @@ export const MessagingScreen = ({ username, socket }) => {
   useEffect(() => {
     const getMessageThread = async () => {
       try {
-        const messages = await getRequest("messages")
+        const messages = await getRequest("messages");
         const updatedMessages = messages.map((message) => {
           if (message.from === username.toLowerCase()) {
-            message.sender = true
-            return message
+            message.sender = true;
+            return message;
           } else {
-            return message
+            return message;
           }
-        })
-        setMessages(updatedMessages)
+        });
+        setMessages(updatedMessages);
       } catch (err) {
-        console.log("Error:", err)
-        throw err
+        console.log("Error:", err);
+        throw err;
       }
-    }
+    };
 
-    getMessageThread()
-  }, [])
+    getMessageThread();
+  }, []);
 
   useEffect(() => {
     if (flatListRef.current) {
@@ -69,7 +69,7 @@ export const MessagingScreen = ({ username, socket }) => {
         from: username,
         to: "admin",
         sender: true,
-        created_at: new Date().toLocaleTimeString(),
+        created_at: new Date(),
       });
       setBody("");
       setTableNum("");

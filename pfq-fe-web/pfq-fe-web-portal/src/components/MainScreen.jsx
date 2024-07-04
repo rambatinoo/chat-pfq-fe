@@ -81,7 +81,7 @@ export const MainScreen = ({ username, socket }) => {
         body,
         replyingTo,
         sender: false,
-        created_at: new Date().toLocaleTimeString(),
+        created_at: new Date(),
       });
       setBody("");
     }
