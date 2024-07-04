@@ -1,3 +1,31 @@
 .admin-message {
-    margin-bottom: 50px;
+  margin-bottom: 50px;
+}
+
+.parent {
+  display: grid;
+  grid-template-columns: 1fr repeat(2, 2fr) 4fr;
+  grid-template-rows: 1fr;
+  grid-column-gap: 0px;
+  grid-row-gap: 0px;
+}
+
+#column-1 {
+  border: solid 2px red;
+}
+#column-2 {
+  border: solid 2px blue;
+}
+
+#column-2 button {
+  display: block;
+  width: 90%;
+  margin-bottom: 15px;
+}
+
+#column-3 {
+  border: solid 2px green;
+}
+#column-4 {
+  border: solid 2px orange;
 }
