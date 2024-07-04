@@ -15,7 +15,7 @@ export const MessagePreview = ({ msg, category, setTalkingTo }) => {
         <CardActionArea onClick={() => handleClick(msg.from)}>
           <CardContent>
             <Typography gutterBottom variant="h6" component="div">
-              {msg.body}
+              {msg.body.length > 30 ? msg.body.slice(0, 25) + "..." : msg.body}
             </Typography>
             <Typography variant="body2" color="text.secondary">
               {msg.created_at}

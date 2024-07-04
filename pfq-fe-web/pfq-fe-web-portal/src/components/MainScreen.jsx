@@ -3,6 +3,8 @@ import React from "react";
 import { getRequest } from "../../../../pfq-fe-native/src/utils/api";
 import { sampleMessages } from "../../messagesData";
 import { MessagePreview } from "./MessagePreview";
+import { Chip } from "@mui/material";
+import { alignProperty } from "@mui/material/styles/cssUtils";
 
 export const MainScreen = ({ username, socket }) => {
   const [AllMessages, setAllMessages] = useState(sampleMessages);
@@ -148,7 +150,7 @@ export const MainScreen = ({ username, socket }) => {
         })}
       </div>
       <div id="column-4">
-        <h1>RESPOND</h1>
+        <h1>Replying to {talkingTo}</h1>
         <div>
           <textarea
             placeholder="Message"
@@ -162,12 +164,27 @@ export const MainScreen = ({ username, socket }) => {
         <div style={{ height: "80vh", overflow: "scroll" }}>
           {conversationMessages.map((msg) => {
             return (
-              <div key={msg.created_at} className="admin-message">
-                <p>Message: {msg.body}</p>
-                <p>From: {msg.username ? msg.username : msg.from}</p>
+              <div key={msg.created_at} className="admin-message" style={{display: 'flex', justifyContent: msg.to === 'admin' ? 'flex-start' : "flex-end"}}>
+                 <div >
+                  <Chip
+                    sx={{
+                      height: "auto",
+                      "& .MuiChip-label": {
+                        display: "block",
+                        whiteSpace: "normal",
+                        padding: "0.5rem",
+                      },
+                      maxWidth: "60%",
+                    }}
+                    label={msg.body}
+                  />
+                 </div>
+                <div style={{display: 'flex'}}>
+                  {msg.category ? <p>Category: {msg.category}</p> : null}
+                  {msg.tableNum ? <p>Table No: {msg.tableNum}</p> : null}
+                  {msg.table ? <p>Table No: {msg.table}</p> : null}
+                </div>
                 <p>Time: {msg.created_at}</p>
-                {msg.category ? <p>Category: {msg.category}</p> : null}
-                {msg.tableNum ? <p>Table No: {msg.tableNum}</p> : null}
               </div>
             );
           })}
