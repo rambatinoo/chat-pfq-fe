@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
-
+import React from "react";
 import { getRequest } from "../../../../pfq-fe-native/src/utils/api";
 import { sampleMessages } from "../../messagesData";
 import { MessagePreview } from "./MessagePreview";
-
 
 export const MainScreen = ({ username, socket }) => {
   const [AllMessages, setAllMessages] = useState(sampleMessages);
@@ -11,28 +10,31 @@ export const MainScreen = ({ username, socket }) => {
   const [category, setCategory] = useState("All");
   const [talkingTo, setTalkingTo] = useState("");
   const [body, setBody] = useState("");
+  const [nonAdminMessages, setNonAdminMessages] = useState([]);
+
+  console.log(talkingTo);
 
   useEffect(() => {
     const getMessageThread = async () => {
       try {
-        const messages = await getRequest("messages")
+        const messages = await getRequest("messages");
         const updatedMessages = messages.map((message) => {
           if (message.from === username.toLowerCase()) {
-            message.sender = true
-            return message
+            message.sender = true;
+            return message;
           } else {
-            return message
+            return message;
           }
-        })
-        setAllMessages(updatedMessages)
+        });
+        setAllMessages(updatedMessages);
       } catch (err) {
-        console.log("Error:", err)
-        throw err
+        console.log("Error:", err);
+        throw err;
       }
-    }
+    };
 
-    getMessageThread()
-  }, [])
+    getMessageThread();
+  }, []);
 
   useEffect(() => {
     socket.emit("register", username);
@@ -40,7 +42,6 @@ export const MainScreen = ({ username, socket }) => {
 
   useEffect(() => {
     socket.on("receive-message", (msg) => {
-      console.log(msg);
       setAllMessages((prevMessages) => {
         return [msg, ...prevMessages];
       });
@@ -54,23 +55,23 @@ export const MainScreen = ({ username, socket }) => {
     const filteredMessages = AllMessages.filter(
       (msg) => msg.from === talkingTo || msg.to === talkingTo
     );
-    console.log(filteredMessages, "filtered messages");
     setConversationMessages(filteredMessages);
   }, [talkingTo, AllMessages]);
+
+  useEffect(() => {
+    const filteredMessages = AllMessages.filter((msg) => msg.from !== "admin");
+    setNonAdminMessages(filteredMessages);
+  }, [AllMessages]);
 
   console.log(conversationMessages);
 
   const handleClick = (e) => {
     e.preventDefault();
     setCategory(e.target.value);
-    setConversationMessages([]);
+    setTalkingTo("");
   };
-  console.log(talkingTo);
 
   const sendMessage = () => {
-
-
-
     const replyingTo = conversationMessages[0].from;
 
     if (body.trim() !== "") {
@@ -85,7 +86,7 @@ export const MainScreen = ({ username, socket }) => {
   };
 
   return (
-    <div className="parent">
+    <div className="parent" style={{ height: "95vh" }}>
       <div id="column-1"></div>
       <div id="column-2">
         <button onClick={handleClick} value={"All"}>
@@ -134,8 +135,8 @@ export const MainScreen = ({ username, socket }) => {
           Special Dietary Needs
         </button>
       </div>
-      <div id="column-3">
-        {AllMessages.map((msg) => {
+      <div id="column-3" style={{ overflow: "scroll" }}>
+        {nonAdminMessages.map((msg) => {
           return (
             <MessagePreview
               key={msg.created_at}
@@ -148,17 +149,6 @@ export const MainScreen = ({ username, socket }) => {
       </div>
       <div id="column-4">
         <h1>RESPOND</h1>
-        {conversationMessages.map((msg) => {
-          return (
-            <div key={msg.created_at} className="admin-message">
-              <p>Message: {msg.body}</p>
-              <p>From: {msg.username ? msg.username : msg.from}</p>
-              <p>Time: {msg.created_at}</p>
-              {msg.category ? <p>Category: {msg.category}</p> : null}
-              {msg.tableNum ? <p>Table No: {msg.tableNum}</p> : null}
-            </div>
-          );
-        })}
         <div>
           <textarea
             placeholder="Message"
@@ -168,6 +158,19 @@ export const MainScreen = ({ username, socket }) => {
             value={body}
           ></textarea>
           <button onClick={sendMessage}>Send</button>
+        </div>
+        <div style={{ height: "80vh", overflow: "scroll" }}>
+          {conversationMessages.map((msg) => {
+            return (
+              <div key={msg.created_at} className="admin-message">
+                <p>Message: {msg.body}</p>
+                <p>From: {msg.username ? msg.username : msg.from}</p>
+                <p>Time: {msg.created_at}</p>
+                {msg.category ? <p>Category: {msg.category}</p> : null}
+                {msg.tableNum ? <p>Table No: {msg.tableNum}</p> : null}
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>
