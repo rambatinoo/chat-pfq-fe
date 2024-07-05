@@ -1,16 +1,21 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
-export const MessageBubble = ({ body, isSender, timestamp }) => {
+export const MessageBubble = ({ body, timestamp, to }) => {
   return (
     <View>
       <View
-        style={[styles.container, isSender ? styles.sender : styles.receiver]}
+        style={[
+          styles.container,
+          to === "admin" ? styles.sender : styles.receiver,
+        ]}
       >
-        <Text style={isSender ? styles.messageText : styles.messageTextAdmin}>
+        <Text
+          style={to === "admin" ? styles.messageText : styles.messageTextAdmin}
+        >
           {body}
         </Text>
       </View>
-      <Text style={isSender ? styles.timestamp : styles.timestampAdmin}>
+      <Text style={to === "admin" ? styles.timestamp : styles.timestampAdmin}>
         {timestamp}
       </Text>
     </View>
