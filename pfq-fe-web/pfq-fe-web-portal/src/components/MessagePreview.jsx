@@ -4,26 +4,32 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import { CardActionArea } from "@mui/material";
 import { timeSince } from "../utils/TimeAgo";
+import { Avatar } from "@mui/material";
+import { AvatarContainer } from "./AvatarContainer";
 
-export const MessagePreview = ({ msg, category, setTalkingTo }) => {
+export const MessagePreview = ({ msg, category, setTalkingTo, talkingTo }) => {
+  console.log(talkingTo, "fromMessagePreview")
+
   const handleClick = (from) => {
     setTalkingTo(from);
   };
 
   if (msg.category === category || category === "All") {
-    return (
-      <Card sx={{ maxWidth: 345 }}>
-        <CardActionArea onClick={() => handleClick(msg.from)}>
-          <CardContent>
-            <Typography gutterBottom variant="h6" component="div">
-              {msg.body.length > 30 ? msg.body.slice(0, 25) + "..." : msg.body}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              {timeSince(msg.created_at)}
-            </Typography>
-          </CardContent>
-        </CardActionArea>
-      </Card>
-    );
+    return <div 
+      id='preview-container'
+      onClick={() => handleClick(msg.from)}
+      >
+        <div id='preview-avatar'>
+          <Avatar sx={{ bgcolor: 'secondary.main'}}>{talkingTo}</Avatar>
+        </div>
+        <div id='message-preview'>
+          <p>{msg.body}</p>
+        </div>
+        <div id='message-preview-timestamp'>
+          <p>{timeSince(msg.created_at)}</p>
+        </div>
+    </div>
+
+    ;
   }
 };

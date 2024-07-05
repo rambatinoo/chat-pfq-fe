@@ -82,7 +82,7 @@ export const Login = ({ setUsername }) => {
   }
 
   return (
-
+    <div className='login'>
     <div className='login-container'>
     {message && <p className='login-message'>{message}</p>}
     <img src='../public/logo.png' id="logo"/>
@@ -113,6 +113,7 @@ export const Login = ({ setUsername }) => {
       <p className='designtag'>
         Designed & built by: Liam, Matt, Jake & Barry
       </p>
+    </div>
     </div>
   );
 };
