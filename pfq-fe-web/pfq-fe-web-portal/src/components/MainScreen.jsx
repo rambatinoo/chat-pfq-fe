@@ -16,6 +16,8 @@ export const MainScreen = ({ username, setUsername, socket }) => {
   const [nonAdminMessages, setNonAdminMessages] = useState([]);
   const [allCategories, setAllCategories] = useState([]);
 
+  console.log(talkingTo, "from MainScreen")
+
   useEffect(() => {
     const getMessageThread = async () => {
       try {
@@ -46,7 +48,7 @@ export const MainScreen = ({ username, setUsername, socket }) => {
   useEffect(() => {
     socket.on("receive-message", (msg) => {
       setAllMessages((prevMessages) => {
-        return [msg, ...prevMessages];
+        return [...prevMessages, msg];
       });
     });
     return () => {
@@ -116,6 +118,7 @@ export const MainScreen = ({ username, setUsername, socket }) => {
         nonAdminMessages={nonAdminMessages}
         setTalkingTo={setTalkingTo}
         category={category}
+        talkingTo={talkingTo}
       />
       {talkingTo !== "" ? 
       <MessageView
