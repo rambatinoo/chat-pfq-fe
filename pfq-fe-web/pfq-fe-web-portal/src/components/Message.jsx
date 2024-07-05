@@ -2,7 +2,7 @@ import { Chip } from "@mui/material"
 
 export function Message({ msg }) {
 
-    const formattedCategory =  msg.category ? `${msg.category[0]}${msg.category.slice(1, msg.category.length)}` : undefined
+    const formattedCategory =  msg.category ? `${msg.category[0].toLowerCase()}${msg.category.slice(1, msg.category.length)}` : undefined
 
     return <div 
         id='message'
@@ -17,7 +17,7 @@ export function Message({ msg }) {
                 id='bubble-container'
                 style={{
                     display: "flex",
-                    justifyContent: msg.to === "admin" ? "flex-start" : "flex-end"
+                    justifyContent: msg.to === "admin" ? "flex-start" : "flex-end",
                 }}>
                 <div id='bubble'>
                     <div id='speech-bubble'>
@@ -32,7 +32,8 @@ export function Message({ msg }) {
                         maxWidth: "33vw",
                         padding: "0.25vh 0.5vw"
                         }}
-                        label={msg.body}/>
+                        label={msg.body}
+                        color={msg.to === "admin" ? "primary" : "secondary"}/>
                     </div>
                     <div id='category-container'>
                         {msg.category ? <p className='bubble-info'>about <p id='message-category'>{formattedCategory}</p></p> : <p className='bubble-info'>Category unknown</p>}

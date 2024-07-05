@@ -111,7 +111,10 @@
 }
 
 #category-container p {
-  margin: 0;
+  padding-right: 2px;
+  margin: 0.5vh 0vw 0vh 0vw;
+  text-align: end;
+  color: darkgray
 }
 
 #timestamp-container {
@@ -119,7 +122,8 @@
 }
 
 #timestamp-container p {
-  margin: 0;
+  margin: 0vh 0vw 0.5vh 0vw;
+  color: darkgray
 }
 
 #message-category {
