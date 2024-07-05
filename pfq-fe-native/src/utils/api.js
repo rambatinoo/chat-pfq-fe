@@ -8,11 +8,20 @@ const apiURL = axios.create({
 export const getRequest = async (endpoint, params = {}) => {
     try {
       const res = await apiURL.get(endpoint, { params });
-      console.log(res)
       return res.data;
     } catch (err) {
       console.log("Error:", err);
       throw err;
     }
   };
+
+  export const postRequest = async (endpoint, body) => {
+    try {
+        const res = await apiURL.post(endpoint, body)
+        return res.data
+    } catch (err) {
+        console.log("Error:", err)
+        throw err;
+    }
+}
   
