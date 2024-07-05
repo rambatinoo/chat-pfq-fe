@@ -26,7 +26,7 @@ export function SpeechBubble({ userType, msg }) {
                 padding: "0.25vh 0.5vw",
               }}
               label={msg.body}
-              color={userType === "admin" ? "secondary" : "primary"}
+              color={userType === "admin" ? "info" : "primary"}
             />
           </div>
           {userType === 'admin' ? (

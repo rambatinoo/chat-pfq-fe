@@ -19,9 +19,15 @@ export const MessagePreview = ({ msg, category, setTalkingTo, talkingTo }) => {
       id='preview-container'
       onClick={() => handleClick(msg.from)}
       >
-      <Avatar>{talkingTo}</Avatar>
-      <p>{msg.body.length > 30 ? msg.body.slice(0, 25) + "..." : msg.body}</p>
-      <p>{timeSince(msg.created_at)}</p>
+        <div id='preview-avatar'>
+          <Avatar sx={{ bgcolor: 'secondary.main'}}>{talkingTo}</Avatar>
+        </div>
+        <div id='message-preview'>
+          <p>{msg.body}</p>
+        </div>
+        <div id='message-preview-timestamp'>
+          <p>{timeSince(msg.created_at)}</p>
+        </div>
     </div>
 
     ;
