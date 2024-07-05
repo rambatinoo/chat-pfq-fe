@@ -6,20 +6,25 @@ import {
   TouchableOpacity,
   Image,
   Dimensions,
-  ImageBackground
+  ImageBackground,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { PaddedTextInput } from "./PaddedTextInput";
 import { getRequest, postRequest } from "../utils/api";
 import { hashPassword } from "../utils/encryption";
 import logo from "../assets/images/logo.png";
-import loader from "../assets/images/loader.gif"
+import loader from "../assets/images/loader.gif";
 import background from "../assets/images/native-background.png";
 
 const { height: screenHeight } = Dimensions.get("window");
 const { width: screenWidth } = Dimensions.get("window");
 
-export const SignUpPage = ({ setCreate, username, setMessage }) => {
+export const SignUpPage = ({
+  setCreate,
+  setMessage,
+  setUsernameText,
+  setPasswordText,
+}) => {
   const [createPasswordText, setCreatePasswordText] = useState("");
   const [confirmPasswordText, setConfirmPasswordText] = useState("");
   const [usernames, setUsernames] = useState([]);
@@ -28,24 +33,23 @@ export const SignUpPage = ({ setCreate, username, setMessage }) => {
     username: "",
     password: "",
   });
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   const [disabled, setDisabled] = useState(false);
 
   useEffect(() => {
-
     const fetchUsers = async () => {
-        try {
-          setLoading(true);
+      try {
+        setLoading(true);
         const fetchedUsernames = await getRequest("users");
         const justUsernames = fetchedUsernames.map((user) => {
           return user.username;
         });
         setUsernames(justUsernames);
       } catch (err) {
-        console.log("Error:", err)
-        throw err
+        console.log("Error:", err);
+        throw err;
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
     };
 
@@ -109,7 +113,9 @@ export const SignUpPage = ({ setCreate, username, setMessage }) => {
           setCreatePasswordText("");
           setMessage("Account created!");
           setDisabled(false);
-          setCreate(false)
+          setUsernameText(updatedUser.username);
+          setPasswordText(newUser.password);
+          setCreate(false);
           return;
         } else {
           setLoading(false);
@@ -132,76 +138,76 @@ export const SignUpPage = ({ setCreate, username, setMessage }) => {
     }
   };
 
-
   if (loading) {
     return (
-    <View style={styles.container}>
-      <Image source={logo} style={styles.logo} />
-      <Image source={loader} style={styles.loader}/>
-    </View>
-  )
+      <View style={styles.container}>
+        <Image source={logo} style={styles.logo} />
+        <Image source={loader} style={styles.loader} />
+      </View>
+    );
   }
 
   return (
     <ImageBackground source={background} style={styles.background}>
-    <View style={styles.container}>
-      <Image source={logo} style={styles.logo} />
-      <PaddedTextInput
-        placeholder="Username *"
-        value={newUser.username}
-        onChangeText={handleUsernameChange}
-        onBlur={checkUsernameExists}
-        editable={!disabled}
-      />
-      <PaddedTextInput
-        placeholder="Password *"
-        value={createPasswordText}
-        onChangeText={handlePasswordChange}
-        secureTextEntry
-        editable={!disabled}
-      />
-      <PaddedTextInput
-        placeholder="Confirm password *"
-        value={confirmPasswordText}
-        onChangeText={handleConfirmPasswordChange}
-        secureTextEntry
-        editable={!disabled}
-      />
-      <View
-        style={[
-          styles.messageContainer,
-          message === "" && styles.invisibleMessageContainer,
-
-        ]}
-      >
-        {message && <Text style={styles.message}>{message}</Text>}
+      <View style={styles.container}>
+        <Image source={logo} style={styles.logo} />
+        <PaddedTextInput
+          placeholder="Username *"
+          value={newUser.username}
+          onChangeText={handleUsernameChange}
+          onBlur={checkUsernameExists}
+          editable={!disabled}
+        />
+        <PaddedTextInput
+          placeholder="Password *"
+          value={createPasswordText}
+          onChangeText={handlePasswordChange}
+          secureTextEntry
+          editable={!disabled}
+        />
+        <PaddedTextInput
+          placeholder="Confirm password *"
+          value={confirmPasswordText}
+          onChangeText={handleConfirmPasswordChange}
+          secureTextEntry
+          editable={!disabled}
+        />
+        <View
+          style={[
+            styles.messageContainer,
+            message === "" && styles.invisibleMessageContainer,
+          ]}
+        >
+          {message && <Text style={styles.message}>{message}</Text>}
+        </View>
+        <TouchableOpacity style={styles.createbutton} onPress={handleSignup}>
+          <Text style={styles.buttonText}>Sign up</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.backbutton}
+          onPress={() => {
+            setUsernameText("")
+            setPasswordText("")
+            setCreate(false);
+          }}
+        >
+          <Text style={styles.buttonText}>Back to login</Text>
+        </TouchableOpacity>
+        <Text style={styles.designtag}>
+          Designed & built by: Liam, Matt, Jake & Barry
+        </Text>
       </View>
-      <TouchableOpacity style={styles.createbutton} onPress={handleSignup}>
-        <Text style={styles.buttonText}>Sign up</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.backbutton}
-        onPress={() => {
-          setCreate(false);
-        }}
-      >
-        <Text style={styles.buttonText}>Back to login</Text>
-      </TouchableOpacity>
-      <Text style={styles.designtag}>
-        Designed & built by: Liam, Matt, Jake & Barry
-      </Text>
-    </View>
     </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
-    background: {
-        flex: 1,
-        justifyContent: "center",
-        height: screenHeight,
-        width: screenWidth,
-      },
+  background: {
+    flex: 1,
+    justifyContent: "center",
+    height: screenHeight,
+    width: screenWidth,
+  },
   container: {
     justifyContent: "center",
     alignItems: "center",
