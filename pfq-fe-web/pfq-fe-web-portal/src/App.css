@@ -8,7 +8,7 @@
 
 .parent {
   display: grid;
-  grid-template-columns: 1fr repeat(2, 2fr) 4fr;
+  grid-template-columns: 75px repeat(2, 1fr) 4fr;
   grid-template-rows: 1fr;
   grid-column-gap: 0px;
   grid-row-gap: 0px;
@@ -19,10 +19,6 @@
   background-color: rgb(160, 160, 160);
   border: solid 2px red;
   height: 100vh;
-  padding: 0;
-  margin: 0;
-  resize: horizontal;
-  overflow: visible;
 }
 #column-2 {
   background-color: rgb(210, 210, 210);
@@ -68,17 +64,70 @@
 #message-composer {
   bottom: 0;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   grid-template-rows: 1fr;
-  grid-column-gap: 0px;
   grid-row-gap: 0px;
   width: 100%;
-  column-gap: 1vw;
 }
 
-#message-composer input {
-  grid-area: 1 / 1 / 2 / 3;
+#message-composer input { 
+  grid-area: 1 / 1 / 2 / 5; 
+  margin: 1vh 0.5vw;
+  height: 3vh;
+  border-radius: 5px;
+  border: 1px solid darkgray;
+  padding-left: 10px;
 }
-#message-composer button {
-  grid-area: 1 / 3 / 2 / 4;
+#message-composer button  { 
+  grid-area: 1 / 5 / 2 / 5; 
+  margin: 1vh 0.5vw;
+  background-color: #7749F8;
+  border-radius: 5px;
+  color: white;
+  font-weight: bolder;
+  border: 1px solid darkgrey;
+}
+
+#message-thread {
+  height: auto;
+  overflow: scroll;
+  padding: 1vh 1vw;
+}
+
+#bubble {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, auto);
+  grid-column-gap: 0px;
+  grid-row-gap: 0px;
+}
+
+#speech-bubble {
+  grid-area: 2 / 1 / 3 / 4; 
+}
+
+#category-container {
+  grid-area: 3 / 1 / 4 / 4;
+  margin: 0;
+}
+
+#category-container p {
+  margin: 0;
+}
+
+#timestamp-container {
+  grid-area: 1 / 1 / 2 / 4;
+}
+
+#timestamp-container p {
+  margin: 0;
+}
+
+#message-category {
+  display: inline;
+  font-weight: bolder;
+}
+
+.bubble-info {
+  font-size: 0.8rem;
 }
