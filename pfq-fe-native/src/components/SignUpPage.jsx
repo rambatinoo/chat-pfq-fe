@@ -5,30 +5,48 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
+  Dimensions,
+  ImageBackground
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { PaddedTextInput } from "./PaddedTextInput";
 import { getRequest, postRequest } from "../utils/api";
 import { hashPassword } from "../utils/encryption";
 import logo from "../assets/images/logo.png";
+import loader from "../assets/images/loader.gif"
+import background from "../assets/images/native-background.png";
 
-export const SignUpPage = ({ setCreate, username, setLoading }) => {
+const { height: screenHeight } = Dimensions.get("window");
+const { width: screenWidth } = Dimensions.get("window");
+
+export const SignUpPage = ({ setCreate, username, setMessage }) => {
   const [createPasswordText, setCreatePasswordText] = useState("");
   const [confirmPasswordText, setConfirmPasswordText] = useState("");
   const [usernames, setUsernames] = useState([]);
-  const [message, setMessage] = useState("");
+  const [message, setSignupMessage] = useState("");
   const [newUser, setNewUser] = useState({
     username: "",
     password: "",
   });
+  const [loading, setLoading] = useState(false)
+  const [disabled, setDisabled] = useState(false);
 
   useEffect(() => {
+
     const fetchUsers = async () => {
-      const fetchedUsernames = await getRequest("users");
-      const justUsernames = fetchedUsernames.map((user) => {
-        return user.username;
-      });
-      setUsernames(justUsernames);
+        try {
+          setLoading(true);
+        const fetchedUsernames = await getRequest("users");
+        const justUsernames = fetchedUsernames.map((user) => {
+          return user.username;
+        });
+        setUsernames(justUsernames);
+      } catch (err) {
+        console.log("Error:", err)
+        throw err
+      } finally {
+        setLoading(false)
+      }
     };
 
     fetchUsers();
@@ -50,18 +68,18 @@ export const SignUpPage = ({ setCreate, username, setLoading }) => {
   const handleConfirmPasswordChange = (text) => {
     setConfirmPasswordText(text);
     if (text !== createPasswordText) {
-      setMessage("Passwords don't match");
+      setSignupMessage("Passwords don't match");
     } else if (createPasswordText === "" && !confirmPasswordText === "") {
-      setMessage("");
+      setSignupMessage("");
     } else {
-      setMessage("");
+      setSignupMessage("");
     }
   };
 
   const checkUsernameExists = () => {
     usernames.includes(newUser.username.toLowerCase())
-      ? setMessage("Username already taken.")
-      : setMessage("");
+      ? setSignupMessage("Username already taken.")
+      : setSignupMessage("");
   };
 
   const handleSignup = async () => {
@@ -71,11 +89,12 @@ export const SignUpPage = ({ setCreate, username, setLoading }) => {
       createPasswordText.length > 0
     ) {
       if (message === "Username already taken.") {
-        setMessage("Please choose a different username.");
+        setSignupMessage("Please choose a different username.");
         return;
       }
       try {
-        setLoading(true)
+        setLoading(true);
+        setDisabled(true);
         const hashedPassword = await hashPassword(newUser.password);
         const updatedUser = {
           username: newUser.username.toLowerCase(),
@@ -84,32 +103,47 @@ export const SignUpPage = ({ setCreate, username, setLoading }) => {
         };
         const result = await postRequest("users", updatedUser);
         if (result.acknowledged) {
-            setLoading(false)
+          setLoading(false);
           setNewUser({ ...newUser, username: "" });
           setConfirmPasswordText("");
           setCreatePasswordText("");
           setMessage("Account created!");
+          setDisabled(false);
+          setCreate(false)
           return;
         } else {
-            setLoading(false)
-          setMessage("Error creating account, please try again.");
+          setLoading(false);
+          setSignupMessage("Error creating account, please try again.");
           setNewUser({ ...newUser, username: "" });
           setConfirmPasswordText("");
           setCreatePasswordText("");
+          setDisabled(false);
           return;
         }
       } catch (err) {
-        setLoading(false)
+        setLoading(false);
+        setDisabled(false);
         console.log("Error:", err);
         throw err;
       }
     } else {
-      setMessage("Error: Please check all fields are completed.");
+      setSignupMessage("Error: Please check all fields are completed.");
       return;
     }
   };
 
+
+  if (loading) {
+    return (
+    <View style={styles.container}>
+      <Image source={logo} style={styles.logo} />
+      <Image source={loader} style={styles.loader}/>
+    </View>
+  )
+  }
+
   return (
+    <ImageBackground source={background} style={styles.background}>
     <View style={styles.container}>
       <Image source={logo} style={styles.logo} />
       <PaddedTextInput
@@ -117,24 +151,27 @@ export const SignUpPage = ({ setCreate, username, setLoading }) => {
         value={newUser.username}
         onChangeText={handleUsernameChange}
         onBlur={checkUsernameExists}
+        editable={!disabled}
       />
       <PaddedTextInput
         placeholder="Password *"
         value={createPasswordText}
         onChangeText={handlePasswordChange}
         secureTextEntry
+        editable={!disabled}
       />
       <PaddedTextInput
         placeholder="Confirm password *"
         value={confirmPasswordText}
         onChangeText={handleConfirmPasswordChange}
         secureTextEntry
+        editable={!disabled}
       />
       <View
         style={[
           styles.messageContainer,
           message === "" && styles.invisibleMessageContainer,
-          message === "Account created!" && styles.createdMessage,
+
         ]}
       >
         {message && <Text style={styles.message}>{message}</Text>}
@@ -154,10 +191,17 @@ export const SignUpPage = ({ setCreate, username, setLoading }) => {
         Designed & built by: Liam, Matt, Jake & Barry
       </Text>
     </View>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
+    background: {
+        flex: 1,
+        justifyContent: "center",
+        height: screenHeight,
+        width: screenWidth,
+      },
   container: {
     justifyContent: "center",
     alignItems: "center",
@@ -167,15 +211,10 @@ const styles = StyleSheet.create({
     width: 180,
     height: 40,
     top: 75,
-    position: "absolute"
+    position: "absolute",
   },
   message: {
     color: "white",
-  },
-  createdMessage: {
-    backgroundColor: "rgba(50, 168, 82, 0.7)",
-    textAlign: "center",
-    verticalAlign: "middle",
   },
   messageContainer: {
     color: "white",
@@ -206,6 +245,13 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.55,
     shadowRadius: 4,
+  },
+  loader: {
+    justifyContent: "center",
+    alignItems: "center",
+    height: 75,
+    width: 75,
+    position: "absolute",
   },
   backbutton: {
     width: 130,
