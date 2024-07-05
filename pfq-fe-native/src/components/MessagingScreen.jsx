@@ -62,13 +62,15 @@ export const MessagingScreen = ({ username, socket }) => {
   }, [messages]);
 
   const sendMessage = () => {
+    const date = new Date().toISOString();
+    console.log(date, typeof date);
     if (body.trim() !== "") {
       socket.emit("send-customer-message", {
         body,
         tableNum,
         from: username,
         to: "admin",
-        created_at: JSON.stringify(new Date()),
+        created_at: date,
       });
       setBody("");
       setTableNum("");
