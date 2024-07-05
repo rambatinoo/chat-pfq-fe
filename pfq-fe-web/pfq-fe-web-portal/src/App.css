@@ -15,12 +15,21 @@
 }
 #column-2 {
   border: solid 2px blue;
+  display: flex;
+  flex-direction: column;
+  justify-content:flex-start;
+  align-items: center;
+  padding: 10px;
+  margin: 0;
+  background-color: #d8d8d8
 }
 
 #column-2 button {
   display: block;
   width: 90%;
-  margin-bottom: 15px;
+  margin-bottom: 5px;
+  justify-content: center;
+  align-items: center;
 }
 
 #column-3 {
