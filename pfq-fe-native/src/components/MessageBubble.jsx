@@ -1,5 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
+import { timeSince } from "../utils/TimeAgo";
 export const MessageBubble = ({ body, timestamp, to }) => {
   return (
     <View>
@@ -16,7 +17,7 @@ export const MessageBubble = ({ body, timestamp, to }) => {
         </Text>
       </View>
       <Text style={to === "admin" ? styles.timestamp : styles.timestampAdmin}>
-        {timestamp}
+        {timeSince(timestamp)}
       </Text>
     </View>
   );
