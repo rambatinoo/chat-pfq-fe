@@ -3,6 +3,7 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import { CardActionArea } from "@mui/material";
+import { timeSince } from "../utils/TimeAgo";
 
 export const MessagePreview = ({ msg, category, setTalkingTo }) => {
   const handleClick = (from) => {
@@ -18,7 +19,7 @@ export const MessagePreview = ({ msg, category, setTalkingTo }) => {
               {msg.body.length > 30 ? msg.body.slice(0, 25) + "..." : msg.body}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              {msg.created_at}
+              {timeSince(msg.created_at)}
             </Typography>
           </CardContent>
         </CardActionArea>
