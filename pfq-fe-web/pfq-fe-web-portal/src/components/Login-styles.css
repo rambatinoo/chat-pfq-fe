@@ -1,6 +1,6 @@
 .login {
   font-family: Arial, sans-serif;
-  background-color: #lightgrey;
+  background-color: #8181813b;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -9,31 +9,55 @@
 }
 
 .login-container {
+  display: flex;
+  flex-direction: column;
   background-color: #f0f0f0;
   padding: 30px;
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   width: 350px;
   text-align: center;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0px 4px 10px 6px rgba(0, 0, 0, 0.2);
+}
+
+.login-container form {
+  display: flex;
+  flex-direction: column;
 }
 
 .login-container input {
-  width: 100%;
+  width: 250px;
   padding: 12px;
+  padding-left: 50px;
   margin: 12px 0;
+  margin-bottom: 10px;
   border: 1px solid #ccc;
-  border-radius: 5px;
+  border-radius: 25px;
+  box-shadow: 1px 3px 5px 0px rgba(0, 0, 0, 0.2);
+  color: #21409a;
+}
+
+
+#logo {
+  width: 300px;
+  scale: 0.9;
+  margin-top: -25px;
 }
 
 .login-container button {
-  width: 100%;
+  align-self: center;
+  width: 200px;
   padding: 12px;
   background-color: #21409a;
   color: #fff;
   border: none;
-  border-radius: 5px;
+  border-radius: 25px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  margin-top: 50px;
+  margin-bottom: 20px;
+  box-shadow: 1px 3px 5px 0px rgba(0, 0, 0, 0.2);
 }
 
 .login-container button:hover {
@@ -43,15 +67,31 @@
 .login-message {
   color: red;
   margin: 10px 0;
+  position: absolute;
+  margin-top: 140px;
+  font-size: smaller;
+
 }
 
 .designtag {
   display: flex;
   justify-content: center;
-  align-items: center;
   position: absolute;
-  bottom: 10px;
-  width: 100%;
-  color: #000000;
+  color: #21409a;
   font-size: 10px;
+  margin-top: 335px;
+}
+
+#username-icon {
+  height: 20px;
+  position: absolute;
+  margin-top: 22px;
+  margin-left: 12px;
+}
+
+#password-icon {
+  height: 20px;
+  position: absolute;
+  margin-top: 22px;
+  margin-left: 12px;
 }

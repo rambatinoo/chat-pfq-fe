@@ -1,14 +1,44 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { exec } from "../../../../pfq-fe-native/src/utils/encryption";
 import { getRequest } from "../../../../pfq-fe-native/src/utils/api";
 import './Login-styles.css'
+import usernameIcon from "../../public/username-icon.png"
+import passwordIcon from "../../public/password-icon.png"
 
 
 export const Login = ({ setUsername }) => {
   const [usernameText, setUsernameText] = useState("");
   const [passwordText, setPasswordText] = useState("");
-  const validUsers = ["admin"];
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false)
+  const [usernames, setUsernames] = useState([])
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        setLoading(true);
+        const fetchedUsernames = await getRequest("users");
+        const justUsernames = fetchedUsernames.map((user) => {
+          return user.username;
+        });
+        setUsernames(justUsernames);
+      } catch (err) {
+        console.log("Error:", err);
+        throw err;
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchUsers();
+  }, [])
+
+  const checkUsernameExists = () => {
+    if (usernameText !== "") {
+      !usernames.includes(usernameText.toLowerCase())
+      ? setMessage("User doesn't exist.")
+      : setMessage("");
+    }
+  };
 
   const handleChange = (e) => {
     e.preventDefault();
@@ -18,21 +48,6 @@ export const Login = ({ setUsername }) => {
       setPasswordText(e.target.value);
     }
   };
-
-  // const handleLogin = async (e) => {
-  //   e.preventDefault();
-  //   if (passwordText) {
-  //     const result = await exec(passwordText);
-  //     if (result) {
-  //       validUsers.includes(usernameText.toLowerCase())
-  //         ? setUsername(usernameText)
-  //         : setMessage("Invalid Username") 
-  //     } else {
-  //       setMessage("Incorrect Password");
-  //       setTimeout(() => setMessage(""), 2000)
-  //     }
-  //   }
-  // };
 
   const handleLogin = async (e) => {
     e.preventDefault()
@@ -70,9 +85,11 @@ export const Login = ({ setUsername }) => {
     <div className='login'>
     <div className='login-container'>
     {message && <p className='login-message'>{message}</p>}
-    <img src='../public/logo.png' style={{width: '300px'}}/>
+    <img src='../public/logo.png' id="logo"/>
     
       <form onSubmit={handleLogin}>
+        <div className="username-input-wrapper">
+        <img src={usernameIcon} id="username-icon"/>  
         <input
           type="text"
           placeholder="Username"
@@ -80,6 +97,9 @@ export const Login = ({ setUsername }) => {
           name="username"
           value={usernameText}
         ></input>
+        </div>
+        <div className="password-input-wrapper">
+        <img src={passwordIcon} id="password-icon"/>  
         <input
           type="password"
           placeholder="Password"
@@ -87,12 +107,13 @@ export const Login = ({ setUsername }) => {
           name="password"
           value={passwordText}
         ></input>
+        </div>
         <button type="submit">Login</button>
       </form>
-    </div>
       <p className='designtag'>
         Designed & built by: Liam, Matt, Jake & Barry
       </p>
+    </div>
     </div>
   );
 };
