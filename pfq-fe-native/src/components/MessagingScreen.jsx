@@ -68,8 +68,7 @@ export const MessagingScreen = ({ username, socket }) => {
         tableNum,
         from: username,
         to: "admin",
-        sender: true,
-        created_at: new Date(),
+        created_at: JSON.stringify(new Date()),
       });
       setBody("");
       setTableNum("");
@@ -86,7 +85,6 @@ export const MessagingScreen = ({ username, socket }) => {
               <MessageBubble
                 to={item.to}
                 body={item.body}
-                isSender={item.sender}
                 timestamp={item.created_at}
               />
             )}
