@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { exec } from "../../../../pfq-fe-native/src/utils/encryption";
 import { getRequest } from "../../../../pfq-fe-native/src/utils/api";
+import './Login-styles.css'
+
 
 export const Login = ({ setUsername }) => {
   const [usernameText, setUsernameText] = useState("");
@@ -66,7 +68,10 @@ export const Login = ({ setUsername }) => {
 
   return (
     <div>
-    {message && <p>{message}</p>}
+    <div className='login-container'>
+    {message && <p className='login-message'>{message}</p>}
+    <img src='../public/logo.png' style={{width: '300px'}}/>
+    
       <form onSubmit={handleLogin}>
         <input
           type="text"
@@ -84,6 +89,10 @@ export const Login = ({ setUsername }) => {
         ></input>
         <button type="submit">Login</button>
       </form>
+    </div>
+      <p className='designtag'>
+        Designed & built by: Liam, Matt, Jake & Barry
+      </p>
     </div>
   );
 };
