@@ -1,20 +1,20 @@
 import { useEffect, useState } from "react";
 import React from "react";
 import { getRequest } from "../../../../pfq-fe-native/src/utils/api";
-import { sampleMessages } from "../../messagesData";
 import { MessagePreview } from "./MessagePreview";
-import { Chip } from "@mui/material";
-import { alignProperty } from "@mui/material/styles/cssUtils";
+import { MessageView } from "../Views/MessageView";
+import { PreviewsView } from "../Views/PreviewsView";
+import { CategoryButtons } from "./CategoryButtons";
+import { Sidebar } from "./Sidebar";
 
-export const MainScreen = ({ username, socket }) => {
-  const [AllMessages, setAllMessages] = useState(sampleMessages);
+export const MainScreen = ({ username, setUsername, socket }) => {
+  const [AllMessages, setAllMessages] = useState([]);
   const [conversationMessages, setConversationMessages] = useState([]);
   const [category, setCategory] = useState("All");
   const [talkingTo, setTalkingTo] = useState("");
   const [body, setBody] = useState("");
   const [nonAdminMessages, setNonAdminMessages] = useState([]);
-
-  console.log(talkingTo);
+  const [allCategories, setAllCategories] = useState([]);
 
   useEffect(() => {
     const getMessageThread = async () => {
@@ -65,15 +65,14 @@ export const MainScreen = ({ username, socket }) => {
     setNonAdminMessages(filteredMessages);
   }, [AllMessages]);
 
-  console.log(conversationMessages);
-
   const handleClick = (e) => {
     e.preventDefault();
     setCategory(e.target.value);
     setTalkingTo("");
   };
 
-  const sendMessage = () => {
+  const sendMessage = (event) => {
+    event.preventDefault();
     const replyingTo = conversationMessages[0].from;
 
     if (body.trim() !== "") {
@@ -81,115 +80,51 @@ export const MainScreen = ({ username, socket }) => {
         body,
         replyingTo,
         sender: false,
-        created_at: new Date(),
+        created_at: new Date().toISOString(),
       });
       setBody("");
     }
   };
+  useEffect(() => {
+    let categoryList = AllMessages.reduce((acc, message) => {
+      if (message.category) {
+        if (!acc[message.category]) {
+          acc[message.category] = 0;
+        }
+        acc[message.category]++;
+      }
+      return acc;
+    }, {});
+    setAllCategories(Object.keys(categoryList));
+    console.log(categoryList);
+  }, [AllMessages]);
 
   return (
-    <div className="parent" style={{ height: "95vh" }}>
-      <div id="column-1"></div>
+    <div className="parent">
+      <div id="column-1">
+        <Sidebar setUsername={setUsername}/>
+      </div>
       <div id="column-2">
-        <button onClick={handleClick} value={"All"}>
-          All
-        </button>
-        <button onClick={handleClick} value={"Service"}>
-          Service
-        </button>
-        <button onClick={handleClick} value={"Food Quality"}>
-          Food Quality
-        </button>
-        <button onClick={handleClick} value={"Staff"}>
-          Staff
-        </button>
-        <button onClick={handleClick} value={"Price"}>
-          Price
-        </button>
-        <button onClick={handleClick} value={"Ambience"}>
-          Ambience
-        </button>
-        <button onClick={handleClick} value={"Cleanliness"}>
-          Cleanliness
-        </button>
-        <button onClick={handleClick} value={"Location"}>
-          Location
-        </button>
-        <button onClick={handleClick} value={"Menu"}>
-          Menu
-        </button>
-        <button onClick={handleClick} value={"Drinks"}>
-          Drinks
-        </button>
-        <button onClick={handleClick} value={"Waiting Time"}>
-          Waiting Time
-        </button>
-        <button onClick={handleClick} value={"Reservation Process"}>
-          Reservation Process
-        </button>
-        <button onClick={handleClick} value={"Outdoor Seating"}>
-          Outdoor Seating
-        </button>
-        <button onClick={handleClick} value={"Events & Catering"}>
-          Events & Catering
-        </button>
-        <button onClick={handleClick} value={"Special Dietary Needs"}>
-          Special Dietary Needs
-        </button>
+        <CategoryButtons
+          handleClick={handleClick}
+          category={category}
+          allCategories={allCategories}
+        />
       </div>
-      <div id="column-3" style={{ overflow: "scroll" }}>
-        {nonAdminMessages.map((msg) => {
-          return (
-            <MessagePreview
-              key={msg.created_at}
-              msg={msg}
-              setTalkingTo={setTalkingTo}
-              category={category}
-            />
-          );
-        })}
-      </div>
-      <div id="column-4">
-        <h1>Replying to {talkingTo}</h1>
-        <div>
-          <textarea
-            placeholder="Message"
-            onChange={(e) => {
-              setBody(e.target.value);
-            }}
-            value={body}
-          ></textarea>
-          <button onClick={sendMessage}>Send</button>
-        </div>
-        <div style={{ height: "80vh", overflow: "scroll" }}>
-          {conversationMessages.map((msg) => {
-            return (
-              <div key={msg.created_at} className="admin-message" style={{display: 'flex', justifyContent: msg.to === 'admin' ? 'flex-start' : "flex-end"}}>
-                 <div >
-                  <Chip
-                    sx={{
-                      height: "auto",
-                      "& .MuiChip-label": {
-                        display: "block",
-                        whiteSpace: "normal",
-                        padding: "0.5rem",
-                      },
-                      maxWidth: "60%",
-                    }}
-                    label={msg.body}
-                  />
-                 </div>
-                <div style={{display: 'flex'}}>
-                  {msg.category ? <p>Category: {msg.category}</p> : null}
-                  {msg.tableNum ? <p>Table No: {msg.tableNum}</p> : null}
-                  {msg.table ? <p>Table No: {msg.table}</p> : null}
-                </div>
-                <p>Time: {msg.created_at}</p>
-              </div>
-            );
-          })}
-        </div>
-      </div>
+      <PreviewsView
+        nonAdminMessages={nonAdminMessages}
+        setTalkingTo={setTalkingTo}
+        category={category}
+      />
+      <MessageView
+        talkingTo={talkingTo}
+        body={body}
+        sendMessage={sendMessage}
+        conversationMessages={conversationMessages}
+        setBody={setBody}
+      />
     </div>
   );
 };
+
+//a

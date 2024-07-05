@@ -10,7 +10,7 @@ function App() {
   const [username, setUsername] = useState("");
   return (
     <div className='app-container'>
-      {username ? (<MainScreen username={username} socket={socket}/>) : ( <Login setUsername={setUsername}/>)}
+      {username ? (<MainScreen username={username} setUsername={setUsername} socket={socket}/>) : ( <Login setUsername={setUsername}/>)}
     </div>
   )
 }

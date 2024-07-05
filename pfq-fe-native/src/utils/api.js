@@ -1,9 +1,8 @@
 import axios from "axios";
 
 const apiURL = axios.create({
-    baseURL: "https://chatpfq-api.onrender.com/api/"
-})
-
+  baseURL: "https://chatpfq-api.onrender.com/api/",
+});
 
 export const getRequest = async (endpoint, params = {}) => {
     try {
@@ -23,5 +22,5 @@ export const getRequest = async (endpoint, params = {}) => {
         console.log("Error:", err)
         throw err;
     }
-}
-  
+};
+
