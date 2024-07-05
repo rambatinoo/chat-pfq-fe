@@ -67,7 +67,7 @@ export const Login = ({ setUsername }) => {
   }
 
   return (
-    <div>
+    <div className="login">
     <div className='login-container'>
     {message && <p className='login-message'>{message}</p>}
     <img src='../public/logo.png' style={{width: '300px'}}/>
