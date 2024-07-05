@@ -3,18 +3,17 @@ import React from "react";
 import { getRequest } from "../../../../pfq-fe-native/src/utils/api";
 import { sampleMessages } from "../../messagesData";
 import { MessagePreview } from "./MessagePreview";
-import { Chip } from "@mui/material";
-import { alignProperty } from "@mui/material/styles/cssUtils";
+import { ButtonGroup, Chip } from "@mui/material";
+import { Button } from "@mui/material";
 
 export const MainScreen = ({ username, socket }) => {
-  const [AllMessages, setAllMessages] = useState(sampleMessages);
+  const [AllMessages, setAllMessages] = useState([]);
   const [conversationMessages, setConversationMessages] = useState([]);
   const [category, setCategory] = useState("All");
   const [talkingTo, setTalkingTo] = useState("");
   const [body, setBody] = useState("");
   const [nonAdminMessages, setNonAdminMessages] = useState([]);
-
-  console.log(talkingTo);
+  const [allCategorys, setAllCategorys] = useState([]);
 
   useEffect(() => {
     const getMessageThread = async () => {
@@ -65,8 +64,6 @@ export const MainScreen = ({ username, socket }) => {
     setNonAdminMessages(filteredMessages);
   }, [AllMessages]);
 
-  console.log(conversationMessages);
-
   const handleClick = (e) => {
     e.preventDefault();
     setCategory(e.target.value);
@@ -86,56 +83,68 @@ export const MainScreen = ({ username, socket }) => {
       setBody("");
     }
   };
+  useEffect(() => {
+    let categoryList = AllMessages.reduce((acc, message) => {
+      if (message.category) {
+        if (!acc[message.category]) {
+          acc[message.category] = 0;
+        }
+        acc[message.category]++;
+      }
+      return acc;
+    }, {});
+    setAllCategorys(Object.keys(categoryList));
+    console.log(categoryList);
+  }, [AllMessages]);
 
+  console.log(AllMessages);
   return (
     <div className="parent" style={{ height: "95vh" }}>
-      <div id="column-1"></div>
+      <div id="column-1">
+
+    
+    <img
+    src=""
+    >
+    
+    </img>
+
+
+      </div>
       <div id="column-2">
-        <button onClick={handleClick} value={"All"}>
+        <Button
+          onClick={handleClick}
+          value={"All"}
+          variant={category === "All" ? "contained" : "outlined"}
+          sx={{
+            margin: "5px",
+            padding: "5px",
+            color: category === "All" ? "white" : "black",
+            backgroundColor:
+              category === "All" ? "#21409a" : "transparent",
+          }}
+        >
           All
-        </button>
-        <button onClick={handleClick} value={"Service"}>
-          Service
-        </button>
-        <button onClick={handleClick} value={"Food Quality"}>
-          Food Quality
-        </button>
-        <button onClick={handleClick} value={"Staff"}>
-          Staff
-        </button>
-        <button onClick={handleClick} value={"Price"}>
-          Price
-        </button>
-        <button onClick={handleClick} value={"Ambience"}>
-          Ambience
-        </button>
-        <button onClick={handleClick} value={"Cleanliness"}>
-          Cleanliness
-        </button>
-        <button onClick={handleClick} value={"Location"}>
-          Location
-        </button>
-        <button onClick={handleClick} value={"Menu"}>
-          Menu
-        </button>
-        <button onClick={handleClick} value={"Drinks"}>
-          Drinks
-        </button>
-        <button onClick={handleClick} value={"Waiting Time"}>
-          Waiting Time
-        </button>
-        <button onClick={handleClick} value={"Reservation Process"}>
-          Reservation Process
-        </button>
-        <button onClick={handleClick} value={"Outdoor Seating"}>
-          Outdoor Seating
-        </button>
-        <button onClick={handleClick} value={"Events & Catering"}>
-          Events & Catering
-        </button>
-        <button onClick={handleClick} value={"Special Dietary Needs"}>
-          Special Dietary Needs
-        </button>
+        </Button>
+        {allCategorys.map((categoryItem) => {
+          return (
+            <Button
+              key={categoryItem}
+              variant={category === categoryItem ? "contained" : "outlined"}
+              onClick={handleClick}
+              value={categoryItem}
+              sx={{
+                margin: "5px",
+                padding: "5px",
+                color: category === categoryItem ? "white" : "black",
+                backgroundColor:
+                  category === categoryItem ? "#21409a" : "transparent",
+              }}
+            >
+              {categoryItem}
+            </Button>
+          );
+        })}
       </div>
       <div id="column-3" style={{ overflow: "scroll" }}>
         {nonAdminMessages.map((msg) => {
@@ -164,8 +173,16 @@ export const MainScreen = ({ username, socket }) => {
         <div style={{ height: "80vh", overflow: "scroll" }}>
           {conversationMessages.map((msg) => {
             return (
-              <div key={msg.created_at} className="admin-message" style={{display: 'flex', justifyContent: msg.to === 'admin' ? 'flex-start' : "flex-end"}}>
-                 <div >
+              <div
+                key={msg.created_at}
+                className="admin-message"
+                style={{
+                  display: "flex",
+                  justifyContent:
+                    msg.to === "admin" ? "flex-start" : "flex-end",
+                }}
+              >
+                <div>
                   <Chip
                     sx={{
                       height: "auto",
@@ -178,8 +195,8 @@ export const MainScreen = ({ username, socket }) => {
                     }}
                     label={msg.body}
                   />
-                 </div>
-                <div style={{display: 'flex'}}>
+                </div>
+                <div style={{ display: "flex" }}>
                   {msg.category ? <p>Category: {msg.category}</p> : null}
                   {msg.tableNum ? <p>Table No: {msg.tableNum}</p> : null}
                   {msg.table ? <p>Table No: {msg.table}</p> : null}
