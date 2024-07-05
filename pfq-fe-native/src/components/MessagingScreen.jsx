@@ -62,14 +62,15 @@ export const MessagingScreen = ({ username, socket }) => {
   }, [messages]);
 
   const sendMessage = () => {
+    const date = new Date().toISOString();
+    console.log(date, typeof date);
     if (body.trim() !== "") {
       socket.emit("send-customer-message", {
         body,
         tableNum,
         from: username,
         to: "admin",
-        sender: true,
-        created_at: new Date(),
+        created_at: date,
       });
       setBody("");
       setTableNum("");
@@ -86,7 +87,6 @@ export const MessagingScreen = ({ username, socket }) => {
               <MessageBubble
                 to={item.to}
                 body={item.body}
-                isSender={item.sender}
                 timestamp={item.created_at}
               />
             )}
