@@ -4,17 +4,17 @@ import { getRequest } from "../../../../pfq-fe-native/src/utils/api";
 import { MessagePreview } from "./MessagePreview";
 import { MessageView } from "../Views/MessageView";
 import { PreviewsView } from "../Views/PreviewsView";
-import { ButtonGroup, Chip } from "@mui/material";
-import { Button } from "@mui/material";
+import { CategoryButtons } from "./CategoryButtons";
+import { Sidebar } from "./Sidebar";
 
-export const MainScreen = ({ username, socket }) => {
+export const MainScreen = ({ username, setUsername, socket }) => {
   const [AllMessages, setAllMessages] = useState([]);
   const [conversationMessages, setConversationMessages] = useState([]);
   const [category, setCategory] = useState("All");
   const [talkingTo, setTalkingTo] = useState("");
   const [body, setBody] = useState("");
   const [nonAdminMessages, setNonAdminMessages] = useState([]);
-  const [allCategorys, setAllCategorys] = useState([]);
+  const [allCategories, setAllCategories] = useState([]);
 
   useEffect(() => {
     const getMessageThread = async () => {
@@ -95,46 +95,21 @@ export const MainScreen = ({ username, socket }) => {
       }
       return acc;
     }, {});
-    setAllCategorys(Object.keys(categoryList));
+    setAllCategories(Object.keys(categoryList));
     console.log(categoryList);
   }, [AllMessages]);
 
   return (
     <div className="parent">
-      <div id="column-1"></div>
+      <div id="column-1">
+        <Sidebar setUsername={setUsername}/>
+      </div>
       <div id="column-2">
-        <Button
-          onClick={handleClick}
-          value={"All"}
-          variant={category === "All" ? "contained" : "outlined"}
-          sx={{
-            margin: "5px",
-            padding: "5px",
-            color: category === "All" ? "white" : "black",
-            backgroundColor: category === "All" ? "#21409a" : "transparent",
-          }}
-        >
-          All
-        </Button>
-        {allCategorys.map((categoryItem) => {
-          return (
-            <Button
-              key={categoryItem}
-              variant={category === categoryItem ? "contained" : "outlined"}
-              onClick={handleClick}
-              value={categoryItem}
-              sx={{
-                margin: "5px",
-                padding: "5px",
-                color: category === categoryItem ? "white" : "black",
-                backgroundColor:
-                  category === categoryItem ? "#21409a" : "transparent",
-              }}
-            >
-              {categoryItem}
-            </Button>
-          );
-        })}
+        <CategoryButtons
+          handleClick={handleClick}
+          category={category}
+          allCategories={allCategories}
+        />
       </div>
       <PreviewsView
         nonAdminMessages={nonAdminMessages}
