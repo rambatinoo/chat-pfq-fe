@@ -80,7 +80,7 @@ export const MainScreen = ({ username, setUsername, socket }) => {
         body,
         replyingTo,
         sender: false,
-        created_at: new Date(),
+        created_at: new Date().toISOString(),
       });
       setBody("");
     }
@@ -126,3 +126,5 @@ export const MainScreen = ({ username, setUsername, socket }) => {
     </div>
   );
 };
+
+//a
