@@ -20,6 +20,11 @@ export const Login = ({ setUsername, username }) => {
   const [create, setCreate] = useState(false);
   const [loading, setLoading] = useState(false)
 
+
+
+
+
+
   const handleLogin = async () => {
     if (usernameText && passwordText) {
       setLoading(true)
@@ -61,8 +66,10 @@ export const Login = ({ setUsername, username }) => {
   }
 
   return (
-    <ImageBackground source={background} style={styles.background}>
-      {!create ? (   <View style={styles.container}>
+<View>
+      {!create ? (   
+            <ImageBackground source={background} style={styles.background}>
+        <View style={styles.container}>
         <Image source={logo} style={styles.logo} />
         <PaddedTextInput
           placeholder="Username"
@@ -77,7 +84,7 @@ export const Login = ({ setUsername, username }) => {
           onChangeText={setPasswordText}
           secureTextEntry
         />
-        {message && <View style={styles.messageContainer}><Text style={styles.message}>{message}</Text></View>}
+        {message && <View style={message === "Account created!" ? styles.createdMessage : styles.messageContainer}><Text style={styles.message}>{message}</Text></View>}
         <TouchableOpacity style={styles.button} onPress={handleLogin}>
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
@@ -85,8 +92,9 @@ export const Login = ({ setUsername, username }) => {
           <Text style={styles.buttonText}>Create Account</Text>
         </TouchableOpacity>
         <Text style={styles.designtag}>Designed & built by: Liam, Matt, Jake & Barry</Text>
-      </View>) : (<SignUpPage setCreate={setCreate} username={username} setLoading={setLoading}/>)}
-    </ImageBackground>
+      </View>
+      </ImageBackground>) : (<SignUpPage setCreate={setCreate} username={username} setMessage={setMessage}/>)}
+      </View>
   );
 };
 
@@ -115,6 +123,13 @@ const styles = StyleSheet.create({
   messageContainer: {
     color: "white",
     backgroundColor: "rgba(255, 0, 0, 0.7)",
+    padding: 10,
+    borderRadius: 25
+  },
+  createdMessage: {
+    backgroundColor: "rgba(50, 168, 82, 0.7)",
+    textAlign: "center",
+    verticalAlign: "middle",
     padding: 10,
     borderRadius: 25
   },
