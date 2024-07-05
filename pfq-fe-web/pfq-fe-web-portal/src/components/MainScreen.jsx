@@ -80,7 +80,7 @@ export const MainScreen = ({ username, socket }) => {
         body,
         replyingTo,
         sender: false,
-        created_at: new Date(),
+        created_at: new Date().toISOString(),
       });
       setBody("");
     }
@@ -111,8 +111,7 @@ export const MainScreen = ({ username, socket }) => {
             margin: "5px",
             padding: "5px",
             color: category === "All" ? "white" : "black",
-            backgroundColor:
-              category === "All" ? "#21409a" : "transparent",
+            backgroundColor: category === "All" ? "#21409a" : "transparent",
           }}
         >
           All
@@ -152,3 +151,5 @@ export const MainScreen = ({ username, socket }) => {
     </div>
   );
 };
+
+//a
