@@ -99,7 +99,6 @@ export const MainScreen = ({ username, socket }) => {
     console.log(categoryList);
   }, [AllMessages]);
 
-  console.log(AllMessages);
   return (
     <div className="parent">
       <div id="column-1"></div>
