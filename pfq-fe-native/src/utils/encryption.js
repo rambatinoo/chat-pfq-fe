@@ -30,7 +30,7 @@ const saltRounds = 8;
 // setUpSecurePRNG();
 
 
-const hashPassword = (clientPassword) => {
+export const hashPassword = (clientPassword) => {
   return new Promise((resolve, reject) => {
     bcrypt.hash(clientPassword, saltRounds, (err, hashedPassword) => {
       if (err) {
