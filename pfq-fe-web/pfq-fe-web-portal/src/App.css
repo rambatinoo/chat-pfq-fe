@@ -8,7 +8,7 @@
 
 .parent {
   display: grid;
-  grid-template-columns: 75px repeat(2, 1fr) 4fr;
+  grid-template-columns: 75px 1fr 1.5fr 3fr;
   grid-template-rows: 1fr;
   grid-column-gap: 0px;
   grid-row-gap: 0px;
@@ -89,7 +89,7 @@
 }
 
 #message-thread {
-  height: auto;
+  height: 100vh;
   overflow: scroll;
   padding: 1vh 1vw;
 }
@@ -138,3 +138,10 @@
   font-size: 0.8rem;
 }
 
+#preview-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5vh 1vw 0.5vh 1vw;
+  column-gap: 0.5vw;
+}
