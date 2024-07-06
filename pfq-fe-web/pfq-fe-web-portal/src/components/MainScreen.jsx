@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import React from "react";
 import { getRequest } from "../../../../pfq-fe-native/src/utils/api";
-import { MessagePreview } from "./MessagePreview";
 import { MessageView } from "../Views/MessageView";
 import { PreviewsView } from "../Views/PreviewsView";
 import { CategoryButtons } from "./CategoryButtons";
 import { Sidebar } from "./Sidebar";
+import { NoMessageView } from "./NoMessageView";
 
 export const MainScreen = ({ username, setUsername, socket }) => {
   const [AllMessages, setAllMessages] = useState([]);
@@ -31,6 +31,7 @@ export const MainScreen = ({ username, setUsername, socket }) => {
           }
         });
         setAllMessages(updatedMessages);
+       
       } catch (err) {
         console.log("Error:", err);
         throw err;
@@ -119,6 +120,7 @@ export const MainScreen = ({ username, setUsername, socket }) => {
         category={category}
         talkingTo={talkingTo}
       />
+      {talkingTo !== "" ? 
       <MessageView
         talkingTo={talkingTo}
         body={body}
@@ -126,6 +128,9 @@ export const MainScreen = ({ username, setUsername, socket }) => {
         conversationMessages={conversationMessages}
         setBody={setBody}
       />
+      :<NoMessageView/>
+      
+    }
     </div>
   );
 };
