@@ -15,6 +15,7 @@
 		96905EF65AED1B983A6B3ABC /* libPods-pfqfe.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 58EEBF8E8E6FB1BC6CAF49B5 /* libPods-pfqfe.a */; };
 		B18059E884C0ABDD17F3DC3D /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC715A2D49A985799AEE119 /* ExpoModulesProvider.swift */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
+		7C41471604494696939A6118 /* noop-file.swift in Sources */ = {isa = PBXBuildFile; fileRef = F56BB91D863C4A00BF522CAB /* noop-file.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +33,8 @@
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		F916B1D43A2D3F9EAD6B1C8F /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = pfqfe/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		FAC715A2D49A985799AEE119 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-pfqfe/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
+		F56BB91D863C4A00BF522CAB /* noop-file.swift */ = {isa = PBXFileReference; name = "noop-file.swift"; path = "pfqfe/noop-file.swift"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.swift; explicitFileType = undefined; includeInIndex = 0; };
+		CEB0C64FE64149FC81AE4134 /* pfqfe-Bridging-Header.h */ = {isa = PBXFileReference; name = "pfqfe-Bridging-Header.h"; path = "pfqfe/pfqfe-Bridging-Header.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,6 +60,8 @@
 				13B07FB71A68108700A75B9A /* main.m */,
 				AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */,
 				F916B1D43A2D3F9EAD6B1C8F /* PrivacyInfo.xcprivacy */,
+				F56BB91D863C4A00BF522CAB /* noop-file.swift */,
+				CEB0C64FE64149FC81AE4134 /* pfqfe-Bridging-Header.h */,
 			);
 			name = pfqfe;
 			sourceTree = "<group>";
@@ -199,6 +204,7 @@
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */,
 				2F13E463218AD6B4D2ADE42D /* PrivacyInfo.xcprivacy in Resources */,
+				7AC92E34C353443499A795DA /* pfqfe-Bridging-Header.h in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -313,6 +319,7 @@
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				B18059E884C0ABDD17F3DC3D /* ExpoModulesProvider.swift in Sources */,
+				7C41471604494696939A6118 /* noop-file.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -341,11 +348,14 @@
 					"-lc++",
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
-				PRODUCT_BUNDLE_IDENTIFIER = org.name.pfqfe;
-				PRODUCT_NAME = pfqfe;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.anonymous.pfqfe";
+				PRODUCT_NAME = "pfqfe";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
+				TARGETED_DEVICE_FAMILY = "1";
+				SWIFT_OBJC_BRIDGING_HEADER = pfqfe/pfqfe-Bridging-Header.h;
+				CODE_SIGN_ENTITLEMENTS = pfqfe/pfqfe.entitlements;
 			};
 			name = Debug;
 		};
@@ -366,10 +376,13 @@
 					"-lc++",
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
-				PRODUCT_BUNDLE_IDENTIFIER = org.name.pfqfe;
-				PRODUCT_NAME = pfqfe;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.anonymous.pfqfe";
+				PRODUCT_NAME = "pfqfe";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
+				TARGETED_DEVICE_FAMILY = "1";
+				SWIFT_OBJC_BRIDGING_HEADER = pfqfe/pfqfe-Bridging-Header.h;
+				CODE_SIGN_ENTITLEMENTS = pfqfe/pfqfe.entitlements;
 			};
 			name = Release;
 		};

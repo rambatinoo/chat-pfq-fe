@@ -1,4 +1,4 @@
-package com.pfqfe
+package com.anonymous.pfqfe
 
 import android.app.Application
 import android.content.res.Configuration

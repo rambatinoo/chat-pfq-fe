@@ -1,4 +1,4 @@
-package com.pfqfe
+package com.anonymous.pfqfe
 
 import android.os.Build
 import android.os.Bundle
