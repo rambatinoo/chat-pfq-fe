@@ -38,6 +38,7 @@ function App() {
   const [username, setUsername] = useState("");
   return (
     <ThemeProvider theme={theme}>
+
       <div className="app-container">
         {username ? (
           <MainScreen
@@ -48,6 +49,7 @@ function App() {
         ) : (
           <Login setUsername={setUsername} />
         )}
+
       </div>
     </ThemeProvider>
   );

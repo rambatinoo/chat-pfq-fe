@@ -8,6 +8,8 @@ import {
   StyleSheet,
   KeyboardAvoidingView,
   Image,
+  Platform,
+  SafeAreaView,
 } from "react-native";
 import { MessageBubble } from "./MessageBubble";
 import { filterMessagesByUsername } from "../utils/filterMessagesByUsername";
@@ -81,11 +83,16 @@ export const MessagingScreen = ({ username, socket, setUsername }) => {
   const handleLogout = () => {
     setUsername("");
   };
+
   return (
-    <KeyboardAvoidingView style={styles.container}>
+    <SafeAreaView style={styles.safeArea}>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
       <View style={styles.topContainer}>
         <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-          <Text>Logout</Text>
+          <Image style={styles.logoutImg} source={require('../assets/images/Bootstrap-Bootstrap-Bootstrap-door-open.512.png')}/>
         </TouchableOpacity>
         <TextInput
           style={styles.tableInput}
@@ -94,48 +101,48 @@ export const MessagingScreen = ({ username, socket, setUsername }) => {
           value={tableNum}
         />
       </View>
-      <View>
-        <View style={styles.messageList}>
-          <FlatList
-            ref={flatListRef}
-            data={filterMessagesByUsername(messages, username)}
-            renderItem={({ item }) => (
-              <MessageBubble
-                to={item.to}
-                body={item.body}
-                timestamp={item.created_at}
-              />
-            )}
-            keyExtractor={(item, index) => index.toString()}
-            contentContainerStyle={styles.messageContainer}
-            onContentSizeChange={() =>
-              flatListRef.current.scrollToEnd({ animated: true })
-            }
-          />
-        </View>
-        <View style={styles.messageInputContainer}>
-          <TextInput
-            style={styles.messageInput}
-            placeholder="Message"
-            onChangeText={(text) => setBody(text)}
-            value={body}
-            multiline={true}
-            scrollEnabled={true}
-          />
-          <TouchableOpacity style={styles.sendButton} onPress={sendMessage}>
-            <Image source={sendIcon} style={styles.sendIcon} />
-          </TouchableOpacity>
-        </View>
+      <View style={styles.messageList}>
+        <FlatList
+          ref={flatListRef}
+          data={filterMessagesByUsername(messages, username)}
+          renderItem={({ item }) => (
+            <MessageBubble
+              to={item.to}
+              body={item.body}
+              timestamp={item.created_at}
+            />
+          )}
+          keyExtractor={(item, index) => index.toString()}
+          contentContainerStyle={styles.messageContainer}
+          onContentSizeChange={() =>
+            flatListRef.current.scrollToEnd({ animated: true })
+          }
+        />
+      </View>
+      <View style={styles.messageInputContainer}>
+        <TextInput
+          style={styles.messageInput}
+          placeholder="Message"
+          onChangeText={(text) => setBody(text)}
+          value={body}
+          multiline={true}
+          scrollEnabled={true}
+        />
+        <TouchableOpacity style={styles.sendButton} onPress={sendMessage}>
+          <Image source={sendIcon} style={styles.sendIcon} />
+        </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+  },
   container: {
     flex: 1,
-    justifyContent: "space-between",
-    marginBottom: 0,
   },
   messageContainer: {
     paddingHorizontal: 10,
@@ -147,11 +154,11 @@ const styles = StyleSheet.create({
     padding: 10,
     borderTopWidth: 1,
     borderColor: "#ccc",
-    backgroundColor: "#fff",
-    minWidth: "100%",
+    justifyContent: "center",
+    width: "100%",
   },
   messageList: {
-    maxHeight: "80%",
+    flex: 1,
   },
   messageInput: {
     borderWidth: 1,
@@ -159,18 +166,14 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     paddingVertical: 10,
     paddingHorizontal: 15,
-    maxHeight: 80,
+    maxHeight: 50,
     backgroundColor: "#f0f0f0",
     flex: 1,
     marginRight: 10,
-    paddingRight: 70,
   },
   sendButton: {
-    position: "absolute",
-    bottom: 7,
-    right: 15,
-    justifyContent: "bottom",
-    alignItems: "bottom",
+    justifyContent: "center",
+    alignItems: "center",
     borderRadius: 20,
     paddingVertical: 10,
     paddingHorizontal: 15,
@@ -185,6 +188,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: "10%",
     paddingHorizontal: 90,
+    paddingVertical: 10,
   },
   tableInput: {
     height: 40,
@@ -198,4 +202,9 @@ const styles = StyleSheet.create({
     width: 25,
     height: 25,
   },
+  logoutImg: {
+    width: 25,
+    height: 25,
+    resizeMode: "contain",
+  }
 });
