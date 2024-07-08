@@ -8,14 +8,14 @@ import {
   StyleSheet,
   KeyboardAvoidingView,
   Image,
-  Platform,
-  SafeAreaView,
+  Platform
 } from "react-native";
 import { MessageBubble } from "./MessageBubble";
 import { filterMessagesByUsername } from "../utils/filterMessagesByUsername";
 import { getRequest } from "../utils/api";
 import sendIcon from "../assets/images/send-icon.png";
 import loader from "../assets/images/loader.gif";
+import logo from "../assets/images/logo.png"
 
 export const MessagingScreen = ({ username, socket, setUsername }) => {
   const [messages, setMessages] = useState([]);
@@ -40,6 +40,7 @@ export const MessagingScreen = ({ username, socket, setUsername }) => {
         setLoading(false);
         setMessages(updatedMessages);
       } catch (err) {
+        setLoading(false)
         console.log("Error:", err);
         throw err;
       }
@@ -101,9 +102,11 @@ export const MessagingScreen = ({ username, socket, setUsername }) => {
             source={require("../assets/images/Bootstrap-Bootstrap-Bootstrap-door-open.512.png")}
           />
         </TouchableOpacity>
+        <Image style={styles.logo} source={logo}/>
         <TextInput
           style={styles.tableInput}
           placeholder="Table #"
+          placeholderTextColor= "#21409a"
           onChangeText={(text) => setTableNum(text)}
           value={tableNum}
         />
@@ -152,9 +155,6 @@ export const MessagingScreen = ({ username, socket, setUsername }) => {
 };
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-  },
   container: {
     flex: 1,
   },
@@ -220,7 +220,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     marginTop: "10%",
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
     paddingBottom: 10,
     borderBottomWidth: 0.5,
     borderBottomColor: "#21409a",
@@ -236,16 +236,22 @@ const styles = StyleSheet.create({
   },
   tableInput: {
     height: 30,
-    width: 75,
+    width: 70,
     borderWidth: 1,
     borderColor: "#ccc",
     borderRadius: 20,
     paddingHorizontal: 10,
-    color: "#21409a"
+    color: "#21409a",
+    textAlign: "center"
   },
   sendIcon: {
     width: 25,
     height: 25,
+  },
+  logo: {
+    width: 150,
+    height: 50,
+    marginLeft: 50
   },
   logoutImg: {
     width: 25,
