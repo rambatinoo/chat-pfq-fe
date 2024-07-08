@@ -1,4 +1,4 @@
-rootProject.name = 'pfqfe'
+rootProject.name = 'pfq-fe'
 
 dependencyResolutionManagement {
   versionCatalogs {

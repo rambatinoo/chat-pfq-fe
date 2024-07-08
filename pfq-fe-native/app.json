@@ -2,6 +2,12 @@
   "expo": {
     "name": "pfq-fe",
     "slug": "pfq-fe",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "android": {
+      "package": "com.anonymous.pfqfe"
+    },
+    "ios": {
+      "bundleIdentifier": "com.anonymous.pfqfe"
+    }
   }
 }
