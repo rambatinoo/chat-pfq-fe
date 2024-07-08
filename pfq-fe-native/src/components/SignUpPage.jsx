@@ -1,12 +1,13 @@
 import {
   Text,
-  TextInput,
   View,
   StyleSheet,
   TouchableOpacity,
   Image,
   Dimensions,
   ImageBackground,
+  TouchableWithoutFeedback,
+  Keyboard
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { PaddedTextInput } from "./PaddedTextInput";
@@ -35,6 +36,7 @@ export const SignUpPage = ({
   });
   const [loading, setLoading] = useState(false);
   const [disabled, setDisabled] = useState(false);
+  const [keyboard, setKeyboard] = useState(false);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -149,7 +151,8 @@ export const SignUpPage = ({
 
   return (
     <ImageBackground source={background} style={styles.background}>
-      <View style={styles.container}>
+         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={keyboard ? styles.keyboard : styles.container}>
         <Image source={logo} style={styles.logo} />
         <PaddedTextInput
           placeholder="Username *"
@@ -157,6 +160,7 @@ export const SignUpPage = ({
           onChangeText={handleUsernameChange}
           onBlur={checkUsernameExists}
           editable={!disabled}
+          setKeyboard={setKeyboard}
         />
         <PaddedTextInput
           placeholder="Password *"
@@ -164,6 +168,7 @@ export const SignUpPage = ({
           onChangeText={handlePasswordChange}
           secureTextEntry
           editable={!disabled}
+          setKeyboard={setKeyboard}
         />
         <PaddedTextInput
           placeholder="Confirm password *"
@@ -171,6 +176,7 @@ export const SignUpPage = ({
           onChangeText={handleConfirmPasswordChange}
           secureTextEntry
           editable={!disabled}
+          setKeyboard={setKeyboard}
         />
         <View
           style={[
@@ -180,11 +186,11 @@ export const SignUpPage = ({
         >
           {message && <Text style={styles.message}>{message}</Text>}
         </View>
-        <TouchableOpacity style={styles.createbutton} onPress={handleSignup}>
+        <TouchableOpacity style={keyboard ? styles.createbuttonKeyboard : styles.createbutton} onPress={handleSignup}>
           <Text style={styles.buttonText}>Sign up</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={styles.backbutton}
+          style={keyboard ? styles.backButtonKeyboard : styles.backbutton}
           onPress={() => {
             setUsernameText("")
             setPasswordText("")
@@ -197,6 +203,7 @@ export const SignUpPage = ({
           Designed & built by: Liam, Matt, Jake & Barry
         </Text>
       </View>
+      </TouchableWithoutFeedback>
     </ImageBackground>
   );
 };
@@ -212,6 +219,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     flex: 1,
+  },
+  keyboard: {
+    justifyContent: "center",
+    alignItems: "center",
+    flex: 1,
+    paddingBottom: 200
   },
   logo: {
     width: 180,
@@ -252,6 +265,19 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.55,
     shadowRadius: 4,
   },
+  createbuttonKeyboard: {
+    width: 175,
+    height: 40,
+    backgroundColor: "white",
+    borderRadius: 25,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: -30,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.55,
+    shadowRadius: 4,
+  },
   loader: {
     justifyContent: "center",
     alignItems: "center",
@@ -272,6 +298,20 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     position: "absolute",
     bottom: 50,
+  },
+  backButtonKeyboard : {
+    width: 130,
+    height: 40,
+    backgroundColor: "white",
+    borderRadius: 25,
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.55,
+    shadowRadius: 4,
+    position: "absolute",
+    bottom: 350,
   },
   buttonText: {
     color: "#21409a",
