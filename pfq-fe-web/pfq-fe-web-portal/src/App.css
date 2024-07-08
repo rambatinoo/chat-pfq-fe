@@ -74,8 +74,8 @@
   width: 100%;
 }
 
-#message-composer input { 
-  grid-area: 1 / 1 / 2 / 5; 
+#message-composer input {
+  grid-area: 1 / 1 / 2 / 5;
   margin: 1vh 0.5vw;
   height: 3vh;
   border-radius: 5px;
@@ -83,10 +83,10 @@
   padding-left: 10px;
 }
 
-#message-composer button  { 
-  grid-area: 1 / 5 / 2 / 5; 
+#message-composer button {
+  grid-area: 1 / 5 / 2 / 5;
   margin: 1vh 0.5vw;
-  background-color: #7749F8;
+  background-color: #7749f8;
   border-radius: 5px;
   color: white;
   font-weight: bolder;
@@ -108,7 +108,7 @@
 }
 
 #speech-bubble {
-  grid-area: 2 / 1 / 3 / 4; 
+  grid-area: 2 / 1 / 3 / 4;
 }
 
 #category-container {
@@ -131,7 +131,7 @@
 
 #timestamp-container p {
   margin: 0vh 0vw 0.5vh 0vw;
-  color: darkgray
+  color: darkgray;
 }
 
 #message-category {
@@ -155,7 +155,7 @@
   padding: 20px;
 }
 
-.no-message-box{
+.no-message-box {
   scale: 0.75;
   display: flex;
   flex-direction: column;
@@ -168,7 +168,7 @@
   font-size: 1.5em;
   text-align: center;
 }
-  
+
 #preview-container {
   display: grid;
   grid-template-columns: 1fr repeat(2, 2fr);
@@ -178,6 +178,11 @@
   align-items: center;
   padding: 0.5vh 1.5vw 0.5vh 1.5vw;
   height: 7vh;
+  transition: background-color ease-out 100ms;
+}
+
+#preview-container:hover {
+  background-color: rgba(192, 149, 232, 0.431);
 }
 
 #preview-avatar {
@@ -207,7 +212,6 @@
   color: #8c8c8c;
 }
 
-
 .animated-button {
   background: none;
   border: none;
@@ -217,6 +221,6 @@
 
 .button-image {
   width: 50px;
-  height: 50px; 
+  height: 50px;
   transition: transform 1s ease-in-out;
 }

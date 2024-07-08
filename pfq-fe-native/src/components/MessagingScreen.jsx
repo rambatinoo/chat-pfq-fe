@@ -65,7 +65,6 @@ export const MessagingScreen = ({ username, socket, setUsername }) => {
 
   const sendMessage = () => {
     const date = new Date().toISOString();
-    console.log(date, typeof date);
     if (body.trim() !== "") {
       socket.emit("send-customer-message", {
         body,
