@@ -47,12 +47,12 @@ const styles = StyleSheet.create({
     maxWidth: "80%",
   },
   sender: {
-    backgroundColor: "#007AFF",
+    backgroundColor: "#21409A",
     alignSelf: "flex-end",
     marginBottom: -8,
     marginTop: -5,
   },
-  receiver: { backgroundColor: "#E5E5EA", marginRight: 200 },
+  receiver: { backgroundColor: "#E7E7E7", marginRight: 200 },
   messageText: { color: "#fff" },
   messageTextAdmin: { color: "#000" },
 });
