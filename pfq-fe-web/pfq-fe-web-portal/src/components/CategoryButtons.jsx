@@ -11,7 +11,8 @@ export const CategoryButtons = ({ handleClick, category, allCategories }) => {
           margin: "5px",
           padding: "5px",
           color: category === "All" ? "white" : "black",
-          backgroundColor: category === "All" ? "#21409a" : "transparent",
+          backgroundColor: category === "All" ? "#21409a" : "white",
+          borderRadius: "15px",
         }}
       >
         All
@@ -29,7 +30,8 @@ export const CategoryButtons = ({ handleClick, category, allCategories }) => {
               padding: "5px",
               color: category === categoryItem ? "white" : "black",
               backgroundColor:
-                category === categoryItem ? "#21409a" : "transparent",
+                category === categoryItem ? "#21409a" : "white",
+                borderRadius: "15px",
             }}
           >
             {categoryItem}
