@@ -34,6 +34,7 @@ function App() {
   const [username, setUsername] = useState("");
   return (
     <ThemeProvider theme={theme}>
+      <title>ChatPFQ</title>
       <div className='app-container'>
         {username ? (<MainScreen username={username} setUsername={setUsername} socket={socket}/>) : ( <Login setUsername={setUsername}/>)}
       </div>

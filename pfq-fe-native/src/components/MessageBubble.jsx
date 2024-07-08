@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
     marginBottom: -8,
     marginTop: -5,
   },
-  receiver: { backgroundColor: "#E7E7E7", marginRight: 200 },
+  receiver: { backgroundColor: "#E7E7E7", marginRight: 200, alignSelf: "flex-start" },
   messageText: { color: "#fff" },
   messageTextAdmin: { color: "#000" },
 });
