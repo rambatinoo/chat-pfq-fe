@@ -15,8 +15,7 @@ export const MainScreen = ({ username, setUsername, socket }) => {
   const [body, setBody] = useState("");
   const [nonAdminMessages, setNonAdminMessages] = useState([]);
   const [allCategories, setAllCategories] = useState([]);
-
-  console.log(talkingTo, "from MainScreen")
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const getMessageThread = async () => {
@@ -31,6 +30,7 @@ export const MainScreen = ({ username, setUsername, socket }) => {
           }
         });
         setAllMessages(updatedMessages);
+        setLoading(false);
        
       } catch (err) {
         console.log("Error:", err);
@@ -99,7 +99,6 @@ export const MainScreen = ({ username, setUsername, socket }) => {
       return acc;
     }, {});
     setAllCategories(Object.keys(categoryList));
-    console.log(categoryList);
   }, [AllMessages]);
 
   return (
@@ -112,6 +111,7 @@ export const MainScreen = ({ username, setUsername, socket }) => {
           handleClick={handleClick}
           category={category}
           allCategories={allCategories}
+          loading={loading}
         />
       </div>
       <PreviewsView
@@ -119,6 +119,7 @@ export const MainScreen = ({ username, setUsername, socket }) => {
         setTalkingTo={setTalkingTo}
         category={category}
         talkingTo={talkingTo}
+        loading={loading}
       />
       {talkingTo !== "" ? 
       <MessageView
