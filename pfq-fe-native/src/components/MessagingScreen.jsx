@@ -7,12 +7,14 @@ import {
   Text,
   StyleSheet,
   KeyboardAvoidingView,
+  Image,
 } from "react-native";
 import { MessageBubble } from "./MessageBubble";
 import { filterMessagesByUsername } from "../utils/filterMessagesByUsername";
 import { getRequest } from "../utils/api";
+import sendIcon from "../assets/images/send-icon.png";
 
-export const MessagingScreen = ({ username, socket }) => {
+export const MessagingScreen = ({ username, socket, setUsername }) => {
   const [messages, setMessages] = useState([]);
   const [body, setBody] = useState("");
   const [tableNum, setTableNum] = useState("");
@@ -76,8 +78,23 @@ export const MessagingScreen = ({ username, socket }) => {
       setTableNum("");
     }
   };
+
+  const handleLogout = () => {
+    setUsername("");
+  };
   return (
     <KeyboardAvoidingView style={styles.container}>
+      <View style={styles.topContainer}>
+        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+          <Text>Logout</Text>
+        </TouchableOpacity>
+        <TextInput
+          style={styles.tableInput}
+          placeholder="Table Number"
+          onChangeText={(text) => setTableNum(text)}
+          value={tableNum}
+        />
+      </View>
       <View>
         <View style={styles.messageList}>
           <FlatList
@@ -107,16 +124,8 @@ export const MessagingScreen = ({ username, socket }) => {
             scrollEnabled={true}
           />
           <TouchableOpacity style={styles.sendButton} onPress={sendMessage}>
-            <Text style={styles.sendButtonText}>Send</Text>
+            <Image source={sendIcon} style={styles.sendIcon} />
           </TouchableOpacity>
-        </View>
-        <View style={styles.middleContainer}>
-          <TextInput
-            style={styles.tableInput}
-            placeholder="Table Number"
-            onChangeText={(text) => setTableNum(text)}
-            value={tableNum}
-          />
         </View>
       </View>
     </KeyboardAvoidingView>
@@ -127,7 +136,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "space-between",
-    marginBottom: 300,
+    marginBottom: 0,
   },
   messageContainer: {
     paddingHorizontal: 10,
@@ -140,6 +149,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderColor: "#ccc",
     backgroundColor: "#fff",
+    minWidth: "100%",
   },
   messageList: {
     maxHeight: "80%",
@@ -154,11 +164,14 @@ const styles = StyleSheet.create({
     backgroundColor: "#f0f0f0",
     flex: 1,
     marginRight: 10,
+    paddingRight: 70,
   },
   sendButton: {
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#007AFF",
+    position: "absolute",
+    bottom: 7,
+    right: 15,
+    justifyContent: "bottom",
+    alignItems: "bottom",
     borderRadius: 20,
     paddingVertical: 10,
     paddingHorizontal: 15,
@@ -167,16 +180,23 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: "bold",
   },
-  middleContainer: {
-    justifyContent: "center",
+  topContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
     alignItems: "center",
+    marginTop: "10%",
+    paddingHorizontal: 90,
   },
   tableInput: {
     height: 40,
-    width: "80%",
+    width: "60%",
     borderWidth: 1,
     borderColor: "#ccc",
     borderRadius: 20,
     paddingHorizontal: 10,
+  },
+  sendIcon: {
+    width: 25,
+    height: 25,
   },
 });
