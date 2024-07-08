@@ -4,7 +4,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { useState, useEffect } from "react";
 import { Login } from "./components/Login";
 import { MessagingScreen } from "./components/MessagingScreen";
-import  io  from "socket.io-client";
+import io from "socket.io-client";
 const socket = io("https://chat-pfq-server.onrender.com/");
 
 export default function App() {
@@ -19,9 +19,13 @@ export default function App() {
   return (
     <View style={styles.container}>
       {username ? (
-        <MessagingScreen username={username} socket={socket} />
+        <MessagingScreen
+          username={username}
+          socket={socket}
+          setUsername={setUsername}
+        />
       ) : (
-        <Login setUsername={setUsername} username={username}/>
+        <Login setUsername={setUsername} username={username} />
       )}
       <StatusBar style="auto" />
     </View>
