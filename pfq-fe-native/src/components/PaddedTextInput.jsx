@@ -2,7 +2,7 @@ import { TextInput, View, StyleSheet, TouchableOpacity, Image} from "react-nativ
 import {useState} from "react"
 import eyeIcon from "../assets/images/hide-icon.png";
 
-export const PaddedTextInput = ({ placeholder, icon, value, onChangeText, secureTextEntry }) => {
+export const PaddedTextInput = ({ placeholder, icon, value, onChangeText, secureTextEntry, setKeyboard }) => {
     const [isFocused, setIsFocused] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const toggleShowPassword = () => {
@@ -18,8 +18,14 @@ export const PaddedTextInput = ({ placeholder, icon, value, onChangeText, secure
           placeholderTextColor="#21409a"
           value={value}
           onChangeText={onChangeText}
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
+          onFocus={() => {
+            setIsFocused(true)
+            setKeyboard(true)
+          }}
+          onBlur={() => {
+            setIsFocused(false)
+            setKeyboard(false)
+          }}
           secureTextEntry={secureTextEntry && !showPassword}
         />
             {secureTextEntry && (
