@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { exec } from "../../../../pfq-fe-native/src/utils/encryption";
 import { getRequest } from "../../../../pfq-fe-native/src/utils/api";
 import './Login-styles.css'
-import usernameIcon from "../../public/username-icon.png"
-import passwordIcon from "../../public/password-icon.png"
+import usernameIcon from "/username-icon.png"
+import passwordIcon from "/password-icon.png"
 
 
 export const Login = ({ setUsername }) => {
