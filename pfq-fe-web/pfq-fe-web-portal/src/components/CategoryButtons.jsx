@@ -6,7 +6,7 @@ export const CategoryButtons = ({
   allCategories,
   loading,
 }) => {
-  const skeletonCount = 5; // Adjust this number to the desired number of skeletons
+  const skeletonCount = 14; // Adjust this number to the desired number of skeletons
 
   return (
     <>
@@ -25,21 +25,21 @@ export const CategoryButtons = ({
         All
       </Button>
       {loading === true ? (
-        <Box sx={{ width: '100%' }}>
-        {Array.from({ length: skeletonCount }).map((_, index) => (
-          <Skeleton
-            key={index}
-            variant="rectangular"
-            sx={{
-              margin: "5px",
-              padding: "5px",
-              borderRadius: "15px",
-              width: 'auto',
-              height: "36px", 
-            }}
-          />
-        ))}
-      </Box>
+        <Box sx={{ width: "100%" }}>
+          {Array.from({ length: skeletonCount }).map((_, index) => (
+            <Skeleton
+              key={index}
+              variant="rectangular"
+              sx={{
+                margin: "5px",
+                padding: "5px",
+                borderRadius: "15px",
+                width: "auto",
+                height: "36px",
+              }}
+            />
+          ))}
+        </Box>
       ) : (
         allCategories.map((categoryItem) => {
           return (

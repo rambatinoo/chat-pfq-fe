@@ -31,7 +31,6 @@ export const MainScreen = ({ username, setUsername, socket }) => {
         });
         setAllMessages(updatedMessages);
         setLoading(false);
-       
       } catch (err) {
         console.log("Error:", err);
         throw err;
@@ -76,7 +75,7 @@ export const MainScreen = ({ username, setUsername, socket }) => {
 
   const sendMessage = (event) => {
     event.preventDefault();
-    const replyingTo = conversationMessages[0].from;
+    const replyingTo = conversationMessages[1].from;
 
     if (body.trim() !== "") {
       socket.emit("send-admin-message", {
@@ -104,7 +103,7 @@ export const MainScreen = ({ username, setUsername, socket }) => {
   return (
     <div className="parent">
       <div id="column-1">
-        <Sidebar setUsername={setUsername}/>
+        <Sidebar setUsername={setUsername} />
       </div>
       <div id="column-2">
         <CategoryButtons
@@ -121,17 +120,17 @@ export const MainScreen = ({ username, setUsername, socket }) => {
         talkingTo={talkingTo}
         loading={loading}
       />
-      {talkingTo !== "" ? 
-      <MessageView
-        talkingTo={talkingTo}
-        body={body}
-        sendMessage={sendMessage}
-        conversationMessages={conversationMessages}
-        setBody={setBody}
-      />
-      :<NoMessageView/>
-      
-    }
+      {talkingTo !== "" ? (
+        <MessageView
+          talkingTo={talkingTo}
+          body={body}
+          sendMessage={sendMessage}
+          conversationMessages={conversationMessages}
+          setBody={setBody}
+        />
+      ) : (
+        <NoMessageView />
+      )}
     </div>
   );
 };
