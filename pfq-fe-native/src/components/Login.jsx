@@ -22,7 +22,7 @@ import loader from "../assets/images/loader.gif";
 const { height: screenHeight } = Dimensions.get("window");
 const { width: screenWidth } = Dimensions.get("window");
 
-export const Login = ({ setUsername, username }) => {
+export const Login = ({ setUsername, username, socket }) => {
   const [usernameText, setUsernameText] = useState("");
   const [passwordText, setPasswordText] = useState("");
   const [message, setMessage] = useState("");
@@ -119,6 +119,7 @@ export const Login = ({ setUsername, username }) => {
           setMessage={setMessage}
           setUsernameText={setUsernameText}
           setPasswordText={setPasswordText}
+          socket={socket}
         />
       )}
     </View>

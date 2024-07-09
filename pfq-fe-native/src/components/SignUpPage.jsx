@@ -15,6 +15,8 @@ import { hashPassword } from "../utils/encryption";
 import logo from "../assets/images/logo.png";
 import loader from "../assets/images/loader.gif";
 import background from "../assets/images/native-background.png";
+import io from "socket.io-client";
+const socket = io("https://chat-pfq-server.onrender.com/");
 
 const { height: screenHeight } = Dimensions.get("window");
 const { width: screenWidth } = Dimensions.get("window");
@@ -107,6 +109,22 @@ export const SignUpPage = ({
         };
         const result = await postRequest("users", updatedUser);
         if (result.acknowledged) {
+          socket.emit("register", newUser.username.toLowerCase());
+          socket.emit(
+            "send-admin-message",
+            {
+              body: "Hello, Welcome to ChatPFQ from Liam, Matt, Jake and Barry (aka. the COUCH SURFERS!). Send us a message!",
+              replyingTo: newUser.username.toLowerCase(),
+              created_at: new Date().toISOString(),
+              table: 0,
+            },
+            (response) => {
+              if (response.error) {
+                console.error("Error sending message:", response.error);
+              }
+            }
+          );
+
           setLoading(false);
           setNewUser({ ...newUser, username: "" });
           setConfirmPasswordText("");
@@ -186,8 +204,8 @@ export const SignUpPage = ({
         <TouchableOpacity
           style={styles.backbutton}
           onPress={() => {
-            setUsernameText("")
-            setPasswordText("")
+            setUsernameText("");
+            setPasswordText("");
             setCreate(false);
           }}
         >

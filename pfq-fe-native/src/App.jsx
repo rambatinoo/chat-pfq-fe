@@ -21,7 +21,7 @@ export default function App() {
       {username ? (
         <MessagingScreen username={username} socket={socket} />
       ) : (
-        <Login setUsername={setUsername} username={username}/>
+        <Login setUsername={setUsername} username={username} socket={socket}/>
       )}
       <StatusBar style="auto" />
     </View>
