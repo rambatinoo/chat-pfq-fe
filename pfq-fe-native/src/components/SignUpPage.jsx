@@ -7,7 +7,7 @@ import {
   Dimensions,
   ImageBackground,
   TouchableWithoutFeedback,
-  Keyboard
+  Keyboard,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { PaddedTextInput } from "./PaddedTextInput";
@@ -16,6 +16,8 @@ import { hashPassword } from "../utils/encryption";
 import logo from "../assets/images/logo.png";
 import loader from "../assets/images/loader.gif";
 import background from "../assets/images/native-background.png";
+import io from "socket.io-client";
+const socket = io("https://chat-pfq-server.onrender.com/");
 
 const { height: screenHeight } = Dimensions.get("window");
 const { width: screenWidth } = Dimensions.get("window");
@@ -109,6 +111,22 @@ export const SignUpPage = ({
         };
         const result = await postRequest("users", updatedUser);
         if (result.acknowledged) {
+          socket.emit("register", newUser.username.toLowerCase());
+          socket.emit(
+            "send-admin-message",
+            {
+              body: "Hello, Welcome to ChatPFQ from Liam, Matt, Jake and Barry (aka. the COUCH SURFERS!). Send us a message!",
+              replyingTo: newUser.username.toLowerCase(),
+              created_at: new Date().toISOString(),
+              table: 0,
+            },
+            (response) => {
+              if (response.error) {
+                console.error("Error sending message:", response.error);
+              }
+            }
+          );
+
           setLoading(false);
           setNewUser({ ...newUser, username: "" });
           setConfirmPasswordText("");
@@ -151,58 +169,61 @@ export const SignUpPage = ({
 
   return (
     <ImageBackground source={background} style={styles.background}>
-         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={keyboard ? styles.keyboard : styles.container}>
-        <Image source={logo} style={styles.logo} />
-        <PaddedTextInput
-          placeholder="Username *"
-          value={newUser.username}
-          onChangeText={handleUsernameChange}
-          onBlur={checkUsernameExists}
-          editable={!disabled}
-          setKeyboard={setKeyboard}
-        />
-        <PaddedTextInput
-          placeholder="Password *"
-          value={createPasswordText}
-          onChangeText={handlePasswordChange}
-          secureTextEntry
-          editable={!disabled}
-          setKeyboard={setKeyboard}
-        />
-        <PaddedTextInput
-          placeholder="Confirm password *"
-          value={confirmPasswordText}
-          onChangeText={handleConfirmPasswordChange}
-          secureTextEntry
-          editable={!disabled}
-          setKeyboard={setKeyboard}
-        />
-        <View
-          style={[
-            styles.messageContainer,
-            message === "" && styles.invisibleMessageContainer,
-          ]}
-        >
-          {message && <Text style={styles.message}>{message}</Text>}
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={keyboard ? styles.keyboard : styles.container}>
+          <Image source={logo} style={styles.logo} />
+          <PaddedTextInput
+            placeholder="Username *"
+            value={newUser.username}
+            onChangeText={handleUsernameChange}
+            onBlur={checkUsernameExists}
+            editable={!disabled}
+            setKeyboard={setKeyboard}
+          />
+          <PaddedTextInput
+            placeholder="Password *"
+            value={createPasswordText}
+            onChangeText={handlePasswordChange}
+            secureTextEntry
+            editable={!disabled}
+            setKeyboard={setKeyboard}
+          />
+          <PaddedTextInput
+            placeholder="Confirm password *"
+            value={confirmPasswordText}
+            onChangeText={handleConfirmPasswordChange}
+            secureTextEntry
+            editable={!disabled}
+            setKeyboard={setKeyboard}
+          />
+          <View
+            style={[
+              styles.messageContainer,
+              message === "" && styles.invisibleMessageContainer,
+            ]}
+          >
+            {message && <Text style={styles.message}>{message}</Text>}
+          </View>
+          <TouchableOpacity
+            style={keyboard ? styles.createbuttonKeyboard : styles.createbutton}
+            onPress={handleSignup}
+          >
+            <Text style={styles.buttonText}>Sign up</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={keyboard ? styles.backButtonKeyboard : styles.backbutton}
+            onPress={() => {
+              setUsernameText("");
+              setPasswordText("");
+              setCreate(false);
+            }}
+          >
+            <Text style={styles.buttonText}>Back to login</Text>
+          </TouchableOpacity>
+          <Text style={styles.designtag}>
+            Designed & built by: Liam, Matt, Jake & Barry
+          </Text>
         </View>
-        <TouchableOpacity style={keyboard ? styles.createbuttonKeyboard : styles.createbutton} onPress={handleSignup}>
-          <Text style={styles.buttonText}>Sign up</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={keyboard ? styles.backButtonKeyboard : styles.backbutton}
-          onPress={() => {
-            setUsernameText("")
-            setPasswordText("")
-            setCreate(false);
-          }}
-        >
-          <Text style={styles.buttonText}>Back to login</Text>
-        </TouchableOpacity>
-        <Text style={styles.designtag}>
-          Designed & built by: Liam, Matt, Jake & Barry
-        </Text>
-      </View>
       </TouchableWithoutFeedback>
     </ImageBackground>
   );
@@ -224,7 +245,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     flex: 1,
-    paddingBottom: 200
+    paddingBottom: 200,
   },
   logo: {
     width: 180,
@@ -299,7 +320,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 50,
   },
-  backButtonKeyboard : {
+  backButtonKeyboard: {
     width: 130,
     height: 40,
     backgroundColor: "white",

@@ -9,21 +9,24 @@ import {
   KeyboardAvoidingView,
   Image,
   Platform,
-  SafeAreaView,
 } from "react-native";
 import { MessageBubble } from "./MessageBubble";
 import { filterMessagesByUsername } from "../utils/filterMessagesByUsername";
 import { getRequest } from "../utils/api";
 import sendIcon from "../assets/images/send-icon.png";
+import loader from "../assets/images/loader.gif";
+import logo from "../assets/images/logo.png";
 
 export const MessagingScreen = ({ username, socket, setUsername }) => {
   const [messages, setMessages] = useState([]);
   const [body, setBody] = useState("");
   const [tableNum, setTableNum] = useState("");
+  const [loading, setLoading] = useState(false);
   const flatListRef = useRef(null);
 
   useEffect(() => {
     const getMessageThread = async () => {
+      setLoading(true);
       try {
         const messages = await getRequest("messages", { username });
         const updatedMessages = messages.map((message) => {
@@ -34,8 +37,10 @@ export const MessagingScreen = ({ username, socket, setUsername }) => {
             return message;
           }
         });
+        setLoading(false);
         setMessages(updatedMessages);
       } catch (err) {
+        setLoading(false);
         console.log("Error:", err);
         throw err;
       }
@@ -85,40 +90,52 @@ export const MessagingScreen = ({ username, socket, setUsername }) => {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
     <KeyboardAvoidingView
       style={styles.container}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
       <View style={styles.topContainer}>
         <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-          <Image style={styles.logoutImg} source={require('../assets/images/Bootstrap-Bootstrap-Bootstrap-door-open.512.png')}/>
+          <Image
+            style={styles.logoutImg}
+            source={require("../assets/images/Bootstrap-Bootstrap-Bootstrap-door-open.512.png")}
+          />
         </TouchableOpacity>
+        <Image style={styles.logo} source={logo} />
         <TextInput
           style={styles.tableInput}
-          placeholder="Table Number"
+          placeholder="Table #"
+          placeholderTextColor="#21409a"
           onChangeText={(text) => setTableNum(text)}
           value={tableNum}
         />
       </View>
-      <View style={styles.messageList}>
-        <FlatList
-          ref={flatListRef}
-          data={filterMessagesByUsername(messages, username)}
-          renderItem={({ item }) => (
-            <MessageBubble
-              to={item.to}
-              body={item.body}
-              timestamp={item.created_at}
-            />
-          )}
-          keyExtractor={(item, index) => index.toString()}
-          contentContainerStyle={styles.messageContainer}
-          onContentSizeChange={() =>
-            flatListRef.current.scrollToEnd({ animated: true })
-          }
-        />
-      </View>
+      {loading ? (
+        <View style={styles.messageListLoader}>
+          <Image source={loader} style={styles.loader} />
+          <Text style={styles.fetchingMessage}>Fetching messages...</Text>
+        </View>
+      ) : (
+        <View style={styles.messageList}>
+          <FlatList
+            ref={flatListRef}
+            data={filterMessagesByUsername(messages, username)}
+            renderItem={({ item }) => (
+              <MessageBubble
+                to={item.to}
+                body={item.body}
+                timestamp={item.created_at}
+              />
+            )}
+            keyExtractor={(item, index) => index.toString()}
+            contentContainerStyle={styles.messageContainer}
+            onContentSizeChange={() =>
+              flatListRef.current.scrollToEnd({ animated: true })
+            }
+          />
+        </View>
+      )}
+
       <View style={styles.messageInputContainer}>
         <TextInput
           style={styles.messageInput}
@@ -133,16 +150,17 @@ export const MessagingScreen = ({ username, socket, setUsername }) => {
         </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>
-    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-  },
   container: {
     flex: 1,
+  },
+  loaderContainer: {
+    flex: 1,
+    alignContent: "center",
+    justifyContent: "center",
   },
   messageContainer: {
     paddingHorizontal: 10,
@@ -157,6 +175,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     width: "100%",
   },
+  messageListLoader: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
   messageList: {
     flex: 1,
   },
@@ -170,6 +193,14 @@ const styles = StyleSheet.create({
     backgroundColor: "#f0f0f0",
     flex: 1,
     marginRight: 10,
+  },
+  fetchingMessage: {
+    paddingTop: 150,
+    justifyContent: "center",
+    alignSelf: "center",
+    color: "#21409a",
+    fontSize: 18,
+    fontWeight: "bold",
   },
   sendButton: {
     justifyContent: "center",
@@ -187,24 +218,41 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     marginTop: "10%",
-    paddingHorizontal: 90,
-    paddingVertical: 10,
+    paddingHorizontal: 10,
+    paddingBottom: 10,
+    borderBottomWidth: 0.5,
+    borderBottomColor: "#21409a",
+    marginHorizontal: 10,
+  },
+  loader: {
+    height: 75,
+    width: 75,
+    position: "absolute",
+    justifyContent: "center",
+    alignItems: "center",
   },
   tableInput: {
-    height: 40,
-    width: "60%",
+    height: 30,
+    width: 70,
     borderWidth: 1,
     borderColor: "#ccc",
     borderRadius: 20,
     paddingHorizontal: 10,
+    color: "#21409a",
+    textAlign: "center",
   },
   sendIcon: {
     width: 25,
     height: 25,
   },
+  logo: {
+    width: 150,
+    height: 50,
+    marginLeft: 50,
+  },
   logoutImg: {
     width: 25,
     height: 25,
     resizeMode: "contain",
-  }
+  },
 });
