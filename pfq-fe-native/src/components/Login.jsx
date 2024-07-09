@@ -1,13 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Text,
-  TextInput,
   View,
   StyleSheet,
   TouchableOpacity,
   Image,
   ImageBackground,
   Dimensions,
+  Keyboard,
+  TouchableWithoutFeedback,
 } from "react-native";
 import { exec } from "../utils/encryption";
 import { getRequest } from "../utils/api";
@@ -28,6 +29,23 @@ export const Login = ({ setUsername, username, socket }) => {
   const [message, setMessage] = useState("");
   const [create, setCreate] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
+  const [keyboard, setKeyboard] = useState(false);
+
+  useEffect(() => {
+    const keyboardShowListener = Keyboard.addListener("keyboardDidShow", (e) =>
+      setKeyboardHeight(e.endCoordinates.height)
+    );
+
+    const keyboardHideListener = Keyboard.addListener("keyboardDidHide", () =>
+      setKeyboardHeight(0)
+    );
+
+    return () => {
+      keyboardShowListener.remove();
+      keyboardHideListener.remove();
+    };
+  }, []);
 
   const handleLogin = async () => {
     if (usernameText && passwordText) {
@@ -49,6 +67,7 @@ export const Login = ({ setUsername, username, socket }) => {
         }
         setUsername(usernameText);
         setLoading(false);
+        Keyboard.dismiss();
       } catch (err) {
         setLoading(false);
         console.log("Error:", err);
@@ -60,6 +79,10 @@ export const Login = ({ setUsername, username, socket }) => {
     }
   };
 
+  const handleDone = () => {
+    Keyboard.dismiss();
+  };
+
   if (loading) {
     return (
       <View style={styles.container}>
@@ -69,49 +92,58 @@ export const Login = ({ setUsername, username, socket }) => {
     );
   }
 
+  console.log(keyboardHeight);
+
   return (
     <View>
       {!create ? (
         <ImageBackground source={background} style={styles.background}>
-          <View style={styles.container}>
-            <Image source={logo} style={styles.logo} />
-            <PaddedTextInput
-              placeholder="Username"
-              icon={usernameIcon}
-              value={usernameText}
-              onChangeText={setUsernameText}
-            />
-            <PaddedTextInput
-              placeholder="Password"
-              icon={padlock}
-              value={passwordText}
-              onChangeText={setPasswordText}
-              secureTextEntry
-            />
-            {message && (
-              <View
-                style={
-                  message === "Account created!"
-                    ? styles.createdMessage
-                    : styles.messageContainer
-                }
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <View style={keyboard ? styles.keyboard : styles.container}>
+              <Image source={logo} style={styles.logo} />
+              <PaddedTextInput
+                placeholder="Username"
+                icon={usernameIcon}
+                value={usernameText}
+                onChangeText={setUsernameText}
+                onSubmitEditing={handleDone}
+                setKeyboard={setKeyboard}
+              />
+              <PaddedTextInput
+                placeholder="Password"
+                icon={padlock}
+                value={passwordText}
+                onChangeText={setPasswordText}
+                secureTextEntry
+                setKeyboard={setKeyboard}
+              />
+              {message && (
+                <View
+                  style={
+                    message === "Account created!"
+                      ? styles.createdMessage
+                      : styles.messageContainer
+                  }
+                >
+                  <Text style={styles.message}>{message}</Text>
+                </View>
+              )}
+              <TouchableOpacity style={styles.button} onPress={handleLogin}>
+                <Text style={styles.buttonText}>Login</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.createbutton}
+                onPress={() => setCreate(true)}
               >
-                <Text style={styles.message}>{message}</Text>
-              </View>
-            )}
-            <TouchableOpacity style={styles.button} onPress={handleLogin}>
-              <Text style={styles.buttonText}>Login</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.createbutton}
-              onPress={() => setCreate(true)}
-            >
-              <Text style={styles.buttonText}>Create Account</Text>
-            </TouchableOpacity>
-            <Text style={styles.designtag}>
-              Designed & built by: Liam, Matt, Jake & Barry
-            </Text>
-          </View>
+                <Text style={styles.buttonText}>Create Account</Text>
+              </TouchableOpacity>
+              {!keyboardHeight && (
+                <Text style={styles.designtag}>
+                  Designed & built by: Liam, Matt, Jake & Barry
+                </Text>
+              )}
+            </View>
+          </TouchableWithoutFeedback>
         </ImageBackground>
       ) : (
         <SignUpPage
@@ -119,7 +151,8 @@ export const Login = ({ setUsername, username, socket }) => {
           setMessage={setMessage}
           setUsernameText={setUsernameText}
           setPasswordText={setPasswordText}
-          socket={socket}
+          setKeyboard={setKeyboard}
+
         />
       )}
     </View>
@@ -144,6 +177,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     flex: 1,
+  },
+  keyboard: {
+    justifyContent: "center",
+    alignItems: "center",
+    flex: 1,
+    paddingBottom: 150,
   },
   message: {
     color: "white",

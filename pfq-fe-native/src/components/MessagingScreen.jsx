@@ -7,19 +7,26 @@ import {
   Text,
   StyleSheet,
   KeyboardAvoidingView,
+  Image,
+  Platform
 } from "react-native";
 import { MessageBubble } from "./MessageBubble";
 import { filterMessagesByUsername } from "../utils/filterMessagesByUsername";
 import { getRequest } from "../utils/api";
+import sendIcon from "../assets/images/send-icon.png";
+import loader from "../assets/images/loader.gif";
+import logo from "../assets/images/logo.png"
 
-export const MessagingScreen = ({ username, socket }) => {
+export const MessagingScreen = ({ username, socket, setUsername }) => {
   const [messages, setMessages] = useState([]);
   const [body, setBody] = useState("");
   const [tableNum, setTableNum] = useState("");
+  const [loading, setLoading] = useState(false);
   const flatListRef = useRef(null);
 
   useEffect(() => {
     const getMessageThread = async () => {
+      setLoading(true);
       try {
         const messages = await getRequest("messages", { username });
         const updatedMessages = messages.map((message) => {
@@ -30,8 +37,10 @@ export const MessagingScreen = ({ username, socket }) => {
             return message;
           }
         });
+        setLoading(false);
         setMessages(updatedMessages);
       } catch (err) {
+        setLoading(false)
         console.log("Error:", err);
         throw err;
       }
@@ -63,7 +72,6 @@ export const MessagingScreen = ({ username, socket }) => {
 
   const sendMessage = () => {
     const date = new Date().toISOString();
-    console.log(date, typeof date);
     if (body.trim() !== "") {
       socket.emit("send-customer-message", {
         body,
@@ -76,9 +84,38 @@ export const MessagingScreen = ({ username, socket }) => {
       setTableNum("");
     }
   };
+
+  const handleLogout = () => {
+    setUsername("");
+  };
+
   return (
-    <KeyboardAvoidingView style={styles.container}>
-      <View>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
+      <View style={styles.topContainer}>
+        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+          <Image
+            style={styles.logoutImg}
+            source={require("../assets/images/Bootstrap-Bootstrap-Bootstrap-door-open.512.png")}
+          />
+        </TouchableOpacity>
+        <Image style={styles.logo} source={logo}/>
+        <TextInput
+          style={styles.tableInput}
+          placeholder="Table #"
+          placeholderTextColor= "#21409a"
+          onChangeText={(text) => setTableNum(text)}
+          value={tableNum}
+        />
+      </View>
+      {loading ? (
+        <View style={styles.messageListLoader}>
+          <Image source={loader} style={styles.loader} />
+          <Text style={styles.fetchingMessage}>Fetching messages...</Text>
+        </View>
+      ) : (
         <View style={styles.messageList}>
           <FlatList
             ref={flatListRef}
@@ -97,27 +134,20 @@ export const MessagingScreen = ({ username, socket }) => {
             }
           />
         </View>
-        <View style={styles.messageInputContainer}>
-          <TextInput
-            style={styles.messageInput}
-            placeholder="Message"
-            onChangeText={(text) => setBody(text)}
-            value={body}
-            multiline={true}
-            scrollEnabled={true}
-          />
-          <TouchableOpacity style={styles.sendButton} onPress={sendMessage}>
-            <Text style={styles.sendButtonText}>Send</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.middleContainer}>
-          <TextInput
-            style={styles.tableInput}
-            placeholder="Table Number"
-            onChangeText={(text) => setTableNum(text)}
-            value={tableNum}
-          />
-        </View>
+      )}
+
+      <View style={styles.messageInputContainer}>
+        <TextInput
+          style={styles.messageInput}
+          placeholder="Message"
+          onChangeText={(text) => setBody(text)}
+          value={body}
+          multiline={true}
+          scrollEnabled={true}
+        />
+        <TouchableOpacity style={styles.sendButton} onPress={sendMessage}>
+          <Image source={sendIcon} style={styles.sendIcon} />
+        </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>
   );
@@ -126,8 +156,11 @@ export const MessagingScreen = ({ username, socket }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "space-between",
-    marginBottom: 300,
+  },
+  loaderContainer: {
+    flex: 1,
+    alignContent: "center",
+    justifyContent: "center",
   },
   messageContainer: {
     paddingHorizontal: 10,
@@ -139,10 +172,16 @@ const styles = StyleSheet.create({
     padding: 10,
     borderTopWidth: 1,
     borderColor: "#ccc",
-    backgroundColor: "#fff",
+    justifyContent: "center",
+    width: "100%",
   },
   messageList: {
-    maxHeight: "80%",
+    flex: 1,
+  },
+  messageListLoader: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center"
   },
   messageInput: {
     borderWidth: 1,
@@ -150,7 +189,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     paddingVertical: 10,
     paddingHorizontal: 15,
-    maxHeight: 80,
+    maxHeight: 50,
     backgroundColor: "#f0f0f0",
     flex: 1,
     marginRight: 10,
@@ -158,7 +197,6 @@ const styles = StyleSheet.create({
   sendButton: {
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#007AFF",
     borderRadius: 20,
     paddingVertical: 10,
     paddingHorizontal: 15,
@@ -167,16 +205,56 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: "bold",
   },
-  middleContainer: {
+  fetchingMessage: {
+    paddingTop: 150,
+    justifyContent: "center",
+    alignSelf: "center",
+    color: "#21409a",
+    fontSize: 18,
+    fontWeight: "bold"
+
+  },
+  topContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginTop: "10%",
+    paddingHorizontal: 10,
+    paddingBottom: 10,
+    borderBottomWidth: 0.5,
+    borderBottomColor: "#21409a",
+    marginHorizontal: 10
+
+  },
+  loader: {
+    height: 75,
+    width: 75,
+    position: "absolute",
     justifyContent: "center",
     alignItems: "center",
   },
   tableInput: {
-    height: 40,
-    width: "80%",
+    height: 30,
+    width: 70,
     borderWidth: 1,
     borderColor: "#ccc",
     borderRadius: 20,
     paddingHorizontal: 10,
+    color: "#21409a",
+    textAlign: "center"
+  },
+  sendIcon: {
+    width: 25,
+    height: 25,
+  },
+  logo: {
+    width: 150,
+    height: 50,
+    marginLeft: 50
+  },
+  logoutImg: {
+    width: 25,
+    height: 25,
+    resizeMode: "contain",
   },
 });
