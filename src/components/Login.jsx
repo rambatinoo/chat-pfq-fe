@@ -92,8 +92,6 @@ export const Login = ({ setUsername, username }) => {
     );
   }
 
-  console.log(keyboardHeight);
-
   return (
     <View>
       {!create ? (
