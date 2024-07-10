@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     borderRadius: 10,
     maxWidth: "80%",
-    marginLeft: 260,
+    marginLeft: 240,
   },
   timestampAdmin: {
     padding: 10,
@@ -54,8 +54,7 @@ const styles = StyleSheet.create({
   receiver: {
     backgroundColor: "#E7E7E7",
     marginRight: 0,
-    alignSelf: "flex-start"
-  
+    alignSelf: "flex-start",
   },
   messageText: { color: "#fff" },
   messageTextAdmin: { color: "#000" },
