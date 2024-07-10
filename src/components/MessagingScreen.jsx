@@ -30,7 +30,7 @@ export const MessagingScreen = ({ username, socket, setUsername }) => {
       try {
         const messages = await getRequest("messages", { username });
         const updatedMessages = messages.map((message) => {
-          if (message.from === username.toLowerCase()) {
+          if (message.from.toLowerCase() === username.toLowerCase()) {
             message.sender = true;
             return message;
           } else {

@@ -65,7 +65,7 @@ export const Login = ({ setUsername, username }) => {
           setTimeout(() => setMessage(""), 5000);
           return;
         }
-        setUsername(usernameText);
+        setUsername(usernameText.toLowerCase());
         setLoading(false);
         Keyboard.dismiss();
       } catch (err) {
