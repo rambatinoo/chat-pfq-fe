@@ -108,6 +108,7 @@ export const MessagingScreen = ({ username, socket, setUsername }) => {
           placeholderTextColor="#21409a"
           onChangeText={(text) => setTableNum(text)}
           value={tableNum}
+          keyboardType="number-pad"
         />
       </View>
       {loading ? (
