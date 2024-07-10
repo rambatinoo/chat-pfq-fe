@@ -198,7 +198,7 @@ export const SignUpPage = ({
           />
           <View
             style={[
-              styles.messageContainer,
+              keyboard ? styles.messageContainerKeyboard : styles.messageContainer,
               message === "" && styles.invisibleMessageContainer,
             ]}
           >
@@ -263,6 +263,15 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     height: 35,
   },
+  messageContainerKeyboard: {
+    color: "white",
+    backgroundColor: "rgba(255, 0, 0, 0.7)",
+    padding: 10,
+    borderRadius: 25,
+    height: 35,
+    position: "absolute",
+    top: 175
+  },
   invisibleMessageContainer: {
     backgroundColor: "transparent",
   },
@@ -293,7 +302,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: -30,
+    marginTop: 0,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.55,
