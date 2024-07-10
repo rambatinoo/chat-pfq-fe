@@ -28,21 +28,20 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     marginHorizontal: 10,
     borderRadius: 10,
-    maxWidth: "100%",
+    maxWidth: "80%",
+    minWidth: 30,
   },
   timestamp: {
     padding: 10,
     marginBottom: 10,
-    marginHorizontal: 10,
     borderRadius: 10,
     maxWidth: "80%",
-    marginLeft: 250,
+    marginLeft: 260,
   },
   timestampAdmin: {
     padding: 10,
     marginBottom: 10,
     marginTop: -10,
-    marginHorizontal: 10,
     borderRadius: 10,
     maxWidth: "80%",
   },
@@ -52,7 +51,12 @@ const styles = StyleSheet.create({
     marginBottom: -8,
     marginTop: -5,
   },
-  receiver: { backgroundColor: "#E7E7E7", marginRight: 200, alignSelf: "flex-start" },
+  receiver: {
+    backgroundColor: "#E7E7E7",
+    marginRight: 0,
+    alignSelf: "flex-start"
+  
+  },
   messageText: { color: "#fff" },
   messageTextAdmin: { color: "#000" },
 });

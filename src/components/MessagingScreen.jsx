@@ -189,10 +189,15 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     paddingVertical: 10,
     paddingHorizontal: 15,
+    paddingRight: 20,
     maxHeight: 50,
     backgroundColor: "#f0f0f0",
     flex: 1,
-    marginRight: 10,
+    width: 10
+  },
+  sendIcon: {
+    width: 25,
+    height: 25,
   },
   fetchingMessage: {
     paddingTop: 150,
@@ -208,6 +213,8 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     paddingVertical: 10,
     paddingHorizontal: 15,
+    position: "absolute",
+    right: 5
   },
   sendButtonText: {
     color: "#fff",
@@ -240,10 +247,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     color: "#21409a",
     textAlign: "center",
-  },
-  sendIcon: {
-    width: 25,
-    height: 25,
   },
   logo: {
     width: 150,
