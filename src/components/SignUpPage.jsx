@@ -115,7 +115,7 @@ export const SignUpPage = ({
           socket.emit(
             "send-admin-message",
             {
-              body: "Hello, Welcome to ChatPFQ from Liam, Matt, Jake and Barry (aka. the COUCH SURFERS!). Send us a message!",
+              body: "Hello, welcome to ChatPFQ from Liam, Matt, Jake and Barry! Send us any feedback about our restaurant here, in real-time! 😎",
               replyingTo: newUser.username.toLowerCase(),
               created_at: new Date().toISOString(),
               table: 0,
@@ -198,7 +198,9 @@ export const SignUpPage = ({
           />
           <View
             style={[
-              keyboard ? styles.messageContainerKeyboard : styles.messageContainer,
+              keyboard
+                ? styles.messageContainerKeyboard
+                : styles.messageContainer,
               message === "" && styles.invisibleMessageContainer,
             ]}
           >
@@ -270,7 +272,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     height: 35,
     position: "absolute",
-    top: 175
+    top: 175,
   },
   invisibleMessageContainer: {
     backgroundColor: "transparent",
