@@ -1,11 +1,13 @@
 import { StatusBar } from "expo-status-bar";
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, LogBox } from "react-native";
 import { useState, useEffect } from "react";
 import { Login } from "./components/Login";
 import { MessagingScreen } from "./components/MessagingScreen";
 import io from "socket.io-client";
 const socket = io("https://chat-pfq-server.onrender.com/");
+
+LogBox.ignoreAllLogs();
 
 export default function App() {
   const [username, setUsername] = useState("");
